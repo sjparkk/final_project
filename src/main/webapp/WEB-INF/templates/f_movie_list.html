@@ -1,0 +1,47 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	class="col-xl-3 col-lg-4 col-md-6" th:each="f:${resultList}">
+	<div class="gen-carousel-movies-style-2 movie-grid style-2">
+		<div class="gen-movie-contain">
+			<div class="gen-movie-img">
+				<img th:src="@{/img/movie/}+${f.movie_img}" alt="streamlab-image"
+					height="1080" width="1920">
+				<div class="gen-movie-add">
+					
+					
+					<div class="movie-actions--link_add-to-playlist dropdown">
+					
+						<div class="dropdown-menu mCustomScrollbar">
+							<div class="mCustomScrollBox">
+								<div class="mCSB_container">
+									<a class="login-link" href="#">Sign in to add this movie to
+										a playlist.</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="gen-movie-action">
+					<a th:href="@{funding_detail(funding_no=${f.funding_no})}"
+						class="gen-button">  <i class="fa fa-check" style="font-size:24px"></i>
+					</a>
+				</div>
+			</div>
+			<div class="gen-info-contain">
+				<div class="gen-movie-info">
+					<h3>
+						<a th:text="${f.movie_title}">영화제목</a>
+					</h3>
+				</div>
+				<div class="gen-movie-meta-holder">
+					<ul>
+						<li th:text="${f.theater_name}">강남점</li>
+                        <li>
+                            <a th:text="${f.movie_runtime}" style="color: white"><span>런타임</span></a>
+                        </li>
+						<li th:text="${#numbers.formatDecimal((1.0 * f.funding_resvSeat / f.funding_totalSeat)*100, 1, 1)+'%'}">90.0%</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

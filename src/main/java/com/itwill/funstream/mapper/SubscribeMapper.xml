@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.funstream.mapper.SubscribeMapper">
+	<!-- 이용권 등록 -->
+	<insert id="createSubscribePass"
+		parameterType="com.itwill.funstream.domain.Subscribe">
+		INSERT INTO subscribe VALUES
+		(subscribe_subs_no_SEQ.NEXTVAL, #{subs_type}, #{subs_price},
+		#{subs_duration}, #{subs_autoPay})
+	</insert>
+
+	<!-- 이용권 삭제 -->
+	<delete id="deleteSubscribePass" parameterType="int">
+		DELETE FROM
+		subscribe
+		WHERE subs_no=#{subs_no}
+	</delete>
+
+	<!-- 이용권 불러오기 -->
+	<select id="readSubscribebySubsNo" parameterType="int"
+		resultType="com.itwill.funstream.domain.Subscribe">
+		SELECT * FROM subscribe WHERE subs_no=#{subs_no}
+	</select>
+
+	<!-- 모든 이용권 불러오기 -->
+	<select id="subscribeList"
+		resultType="com.itwill.funstream.domain.Subscribe">
+		SELECT * FROM subscribe
+	</select>
+
+	<!-- 이용권 가격수정 -->
+	<update id="updateSubscribePassPrice"
+		parameterType="com.itwill.funstream.domain.Subscribe">
+		UPDATE
+		subscribe
+		SET subs_price=#{subs_price} WHERE
+		subs_no=#{subs_no}
+	</update>
+</mapper>

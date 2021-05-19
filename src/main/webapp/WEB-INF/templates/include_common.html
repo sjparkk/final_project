@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="top">
+	<header id="gen-header" class="gen-header-style-1 gen-has-sticky">
+        <div class="gen-bottom-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg navbar-light">
+                            <a class="navbar-brand" href="index">
+                                <img class="img-fluid logo" src="images/logo.png" alt="streamlab-image">
+                            </a>
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <div id="gen-menu-contain" class="gen-menu-contain">
+                                    <ul id="gen-main-menu" class="navbar-nav ml-auto">
+                                        <li class="menu-item">
+                                            <a href="index" aria-current="page">Home</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="#">Movies</a>
+                                            <i class="fa fa-chevron-down gen-submenu-icon"></i>
+                                            <ul class="sub-menu">
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=0&pageno=">전체보기</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=1&pageno=">액션</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=2&pageno=">코미디</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=3&pageno=">드라마</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=4&pageno=">멜로</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=5&pageno=">공포/스릴러</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=6&pageno=">SF/판타지</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="movie_main?genre_no=7&pageno=">애니메이션</a>
+                                                </li>
+                                                
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="funding_main">Funding</a>
+                                            <i class="fa fa-chevron-down gen-submenu-icon"></i>
+                                            <ul class="sub-menu">
+                                                <li class="menu-item">
+                                                    <a href="funding_main">펀딩목록</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="funding_history?pageno=1">신청내역</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        
+                                        <li class="menu-item">
+                                        <a th:href="@{movie_wishlist(pageno=1)}">내가 찜한 컨텐츠</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="gen-header-info-box">
+                                <div class="gen-menu-search-block">
+                                    <a href="javascript:void(0)" id="gen-seacrh-btn"><i class="fa fa-search"></i></a>
+                                    <div class="gen-search-form">
+                                        <form role="search" method="get" class="search-form" action="movie_search">
+                                            <label>
+                                                <span class="screen-reader-text"></span>
+                                                <input type="search" class="search-field" placeholder="Search …"
+                                                    value="" name="search">
+                                                <input type="hidden" name="pageno" value="1">
+                                            </label>
+                                            <!-- @@@@@검색@@@@@ -->
+                                            <button type="submit" class="search-submit"><span
+                                                    class="screen-reader-text"></span></button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="gen-account-holder">
+                                    <a href="javascript:void(0)" id="gen-user-btn"><i class="fa fa-user"></i></a>
+                                    <div class="gen-account-menu">
+                                        <ul class="gen-account-menu">
+                                            <!-- Pms Menu -->
+                                            <th:block th:if="${session.sUserNo == null}">
+                                            <li>
+                                                <a href="user_login_form"><i class="fas fa-sign-in-alt"></i>
+                                                    login </a>
+                                            </li>
+                                            <li>
+                                                <a href="user_regist_form"><i class="fa fa-user"></i>
+                                                    Register </a>
+                                            </li>
+                                            </th:block>
+                                            <th:block th:if="${session.sUserNo != null}">
+                                            <li>
+                                                <a href="user_info_main"><i class="fa fa-user"></i>
+                                                    my page </a>
+                                            </li>
+                                            <li>
+                                                <a href="user_logout_action"><i class="fas fa-sign-in-alt"></i>
+                                                    logout </a>
+                                            </li>
+                                            </th:block>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="gen-btn-container">
+                                    <div class="gen-button-block">
+                                    	<a href="user_subscribe_form" class="gen-button">
+                                            <span class="gen-button-line-left"></span>
+                                            <span class="gen-button-text">Subscribe</span>
+                                    	</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
+<div th:fragment="bottom">
+	<footer id="gen-footer">
+		<div class="gen-footer-style-1">
+			<div class="gen-footer-top">
+				<div class="container">
+					<div class="row">
+						<div class="col-xl-3 col-md-6">
+							<div class="widget">
+								<div class="row">
+									<div class="col-sm-12">
+										<img src="images/logo.png" class="gen-footer-logo"
+											alt="gen-footer-logo">
+										<p>Lorem Ipsum is simply dummy text of the printing and
+											typesetting industry.</p>
+										<ul class="social-link">
+											<li><a href="#" class="facebook"><i
+													class="fab fa-facebook-f"></i></a></li>
+											<li><a href="#" class="facebook"><i
+													class="fab fa-instagram"></i></a></li>
+											<li><a href="#" class="facebook"><i
+													class="fab fa-skype"></i></a></li>
+											<li><a href="#" class="facebook"><i
+													class="fab fa-twitter"></i></a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="widget">
+								<h4 class="footer-title">Explore</h4>
+								<div class="menu-explore-container">
+									<ul class="menu">
+										<li class="menu-item"><a href="index.html"
+											aria-current="page">Home</a></li>
+										<li class="menu-item"><a href="movies-pagination.html">Movies</a></li>
+										<li class="menu-item"><a href="tv-shows-pagination.html">Tv
+												Shows</a></li>
+										<li class="menu-item"><a href="video-pagination.html">Videos</a></li>
+										<li class="menu-item"><a href="#">Actors</a></li>
+										<li class="menu-item"><a href="#">Basketball</a></li>
+										<li class="menu-item"><a href="#">Celebrity</a></li>
+										<li class="menu-item"><a href="#">Cross</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="widget">
+								<h4 class="footer-title">Company</h4>
+								<div class="menu-about-container">
+									<ul class="menu">
+										<li class="menu-item"><a href="contact-us.html">Company</a>
+										</li>
+										<li class="menu-item"><a href="contact-us.html">Privacy
+												Policy</a></li>
+										<li class="menu-item"><a href="contact-us.html">Terms
+												Of Use</a></li>
+										<li class="menu-item"><a href="contact-us.html">Help
+												Center</a></li>
+										<li class="menu-item"><a href="contact-us.html">contact
+												us</a></li>
+										<li class="menu-item"><a href="pricing-style-1.html">Subscribe</a></li>
+										<li class="menu-item"><a href="#">Our Team</a></li>
+										<li class="menu-item"><a href="contact-us.html">Faq</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3  col-md-6">
+							<div class="widget">
+								<h4 class="footer-title">Downlaod App</h4>
+								<div class="row">
+									<div class="col-sm-12">
+										<p>Lorem Ipsum is simply dummy text of the printing and
+											typesetting industry.</p>
+										<a href="#"> <img src="images/asset-35.png"
+											class="gen-playstore-logo" alt="playstore">
+										</a> <a href="#"> <img src="images/asset-36.png"
+											class="gen-appstore-logo" alt="appstore">
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="gen-copyright-footer">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 align-self-center">
+							<span class="gen-copyright"><a target="_blank" href="#">
+									Copyright 2021 stremlab All Rights Reserved.</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>
+<div th:fragment="wish">
+	 <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="position:fixed; top:100px; left:30%; right:30%; z-index:100;">
+	  <div id="wishListToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+	    <div class="toast-header">
+	      <strong class="mr-auto">FunStream</strong>
+	      <small>now</small>
+	      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+	        <span aria-hidden="true">&times;</span>
+	      </button>
+	    </div>
+	    <div class="toast-body">
+	      Hello, world! This is a toast message.
+	    </div>
+	  </div>
+	</div>
+</div>
+<div th:fragment="payment">
+	 <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="position:fixed; top:100px; left:30%; right:30%; z-index:100;">
+	  <div id="paymentRToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+	    <div class="toast-header">
+	      <strong class="mr-auto">FunStream</strong>
+	      <small>now</small>
+	      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+	        <span aria-hidden="true">&times;</span>
+	      </button>
+	    </div>
+	    <div class="toast-body">
+	      Hello, world! This is a toast message.
+	    </div>
+	  </div>
+	</div>
+</div>
+<div th:fragment="preferedTheater">
+	 <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="position:fixed; top:100px; left:30%; right:30%; z-index:100;">
+	  <div id="preferedTheaterToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+	    <div class="toast-header">
+	      <strong class="mr-auto">FunStream</strong>
+	      <small>now</small>
+	      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+	        <span aria-hidden="true">&times;</span>
+	      </button>
+	    </div>
+	    <div class="toast-body">
+	      Hello, world! This is a toast message.
+	    </div>
+	  </div>
+	</div>
+</div>

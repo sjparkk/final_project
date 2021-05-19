@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="description" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="author" content="StreamLab" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Streamlab - Video Streaming HTML5 Template</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.png">
+    <!-- CSS bootstrap-->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <!--  Style -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!--  Responsive -->
+    <link rel="stylesheet" href="css/responsive.css" />
+</head>
+
+<body>
+	<!-- wishList Toast start -->
+	<div id="wish" th:insert="include_common::wish"></div>
+	<!-- wishList Toast end -->
+    <!--=========== Loader =============-->
+    <div id="gen-loading">
+        <div id="gen-loading-center">
+            <img src="images/logo-1.png" alt="loading">
+        </div>
+    </div>
+    <!--=========== Loader =============-->
+
+    <!--========== Header ==============-->
+    <div id="header" th:insert="include_common::top"></div>
+    <!--========== Header ==============-->
+
+    <!-- breadcrumb -->
+    <div class="gen-breadcrumb" style="background-image: url('images/background/asset-25.jpeg');">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <div class="gen-breadcrumb-title">
+                            <h1>
+                                WishList
+                            </h1>
+                        </div>
+                        <div class="gen-breadcrumb-container">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html"><i
+                                            class="fas fa-home mr-2"></i>Home</a></li>
+                                <li class="breadcrumb-item active">WishList</li>
+                            </ol>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb -->
+
+    <!-- Section-1 Start -->
+    <section class="gen-section-padding-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row" id="moviePage">
+                    <!-- movie list start -->
+                        <div class="col-xl-3 col-lg-4 col-md-6" th:each="movie:${movieListPage.movieList}">
+                            <div class="gen-carousel-movies-style-2 movie-grid style-2">
+                                <div class="gen-movie-contain">
+                                    <div class="gen-movie-img">
+                                        <img th:src="@{/img/movie/}+${movie.movie_img}" 
+                                        alt="streamlab-image"
+                                        height="1080" width="1920">
+                                        <div class="gen-movie-add">
+                                        	<!-- wishlist click -->
+                                            <div class="wpulike wpulike-heart ">
+                                                <div class="wp_ulike_general_class">
+                                                    <a th:href="'javascript:insertDeleteWishList('+${movie.movie_no}+');'" 
+                                                    class="sl-button"
+									              	id="wishListToastBtn">
+                                                    <i class="fas fa-heart" style="color:red"></i></a>
+                                                </div>
+                                            </div>
+                                            <!-- wishlist click -->
+                                            <ul class="menu bottomRight">
+                                                <li class="share top">
+                                                    <i class="fa fa-share-alt"></i>
+                                                    <ul class="submenu">
+                                                        <li><a href="#" class="facebook"><i
+                                                                    class="fab fa-facebook-f"></i></a>
+                                                        </li>
+                                                        <li><a href="#" class="facebook"><i
+                                                                    class="fab fa-instagram"></i></a>
+                                                        </li>
+                                                        <li><a href="#" class="facebook"><i
+                                                                    class="fab fa-twitter"></i></a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <div class="movie-actions--link_add-to-playlist dropdown">
+                                                <a class="dropdown-toggle" href="#"><i class="fa fa-plus"></i></a>
+                                                <div class="dropdown-menu mCustomScrollbar">
+                                                    <div class="mCustomScrollBox">
+                                                        <div class="mCSB_container">
+                                                            <a class="login-link" href="#">Sign
+                                                                in to add this movie to a playlist.</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="gen-movie-action">
+                                            <a th:href="@{movie_detail(movie_no=${movie.movie_no})}" class="gen-button">
+                                                <i class="fa fa-play"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="gen-info-contain">
+                                        <div class="gen-movie-info">
+                                            <h3><a th:href="@{movie_detail(movie_no=${movie.movie_no})}" th:text="${movie.movie_title}">The
+                                                    warrior life</a></h3>
+                                        </div>
+                                        <div class="gen-movie-meta-holder">
+                                            <ul>
+                                                <li th:text="${movie.movie_runtime}">2hr 00mins</li>
+                                                <li>
+                                                    <a href="single-movie.html"><span>Action</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- movie list end -->
+                    </div>
+                </div>
+                <!-- page start -->
+                <div class="col-lg-12 col-md-12">
+                    <div class="gen-pagination">
+                        <nav aria-label="Page navigation">
+                            <ul class="page-numbers" th:with="start=${movieListPage.pageMaker.getBlockBegin()},end=${movieListPage.pageMaker.getBlockEnd()}">
+                            	<li><a class="next page-numbers" th:href="@{movie_wishlist(pageno=1)}">Start page</a></li>
+                            		<li th:if="${movieListPage.pageMaker.getPrevPage()!=0}"><a class="next page-numbers" th:href="@{movie_wishlist(pageno=${movieListPage.pageMaker.getPrevPage()})}">Previous page</a></li>
+                            		<li th:unless="${movieListPage.pageMaker.getPrevPage()!=0}"><a class="next page-numbers" th:href="@{movie_wishlist(pageno=1)}">Previous page</a></li>                            	
+                            	<!-- 페이지 -->
+                            	<th:block th:each="page: ${#numbers.sequence(start, end)}">
+									<li th:if="${movieListPage.pageMaker.getCurPage()}==${page}">
+		 	                    		<span aria-current="page" class="page-numbers current" th:text="${page}">1</span>						
+									</li>
+									<li th:unless="${movieListPage.pageMaker.getCurPage()}==${page}">
+                               			<a class="page-numbers" th:href="@{movie_wishlist(pageno=${page})}" th:text="${page}">2</a>
+									</li>
+								</th:block>
+                            	<!-- 페이지 -->
+                            		<li th:if="${movieListPage.pageMaker.getNextPage()<movieListPage.pageMaker.getTotPage()}"><a class="next page-numbers" th:href="@{movie_wishlist(pageno=${movieListPage.pageMaker.getNextPage()})}">Next page</a></li>
+                            		<li th:unless="${movieListPage.pageMaker.getNextPage()<movieListPage.pageMaker.getTotPage()}"><a class="next page-numbers" th:href="@{movie_wishlist(pageno=${movieListPage.pageMaker.getTotPage()})}">Next page</a></li>                            	
+                                <li><a class="next page-numbers" th:href="@{movie_wishlist(pageno=${movieListPage.pageMaker.getTotPage()})}">End page</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <!-- page end -->
+            </div>
+        </div>
+    </section>
+    <!-- Section-1 End -->
+
+    <!-- footer start -->
+    <div id="footer" th:insert="include_common::bottom"></div>
+    <!-- footer End -->
+
+    <!-- Back-to-Top start -->
+    <div id="back-to-top">
+        <a class="top" id="top" href="#top"> <i class="ion-ios-arrow-up"></i> </a>
+    </div>
+    <!-- Back-to-Top end -->
+
+    <!-- js-min -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/asyncloader.min.js"></script>
+    <!-- JS bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- owl-carousel -->
+    <script src="js/owl.carousel.min.js"></script>
+    <!-- counter-js -->
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <!-- popper-js -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/swiper-bundle.min.js"></script>
+    <!-- Iscotop -->
+    <script src="js/isotope.pkgd.min.js"></script>
+
+    <script src="js/jquery.magnific-popup.min.js"></script>
+
+    <script src="js/slick.min.js"></script>
+
+    <script src="js/streamlab-core.js"></script>
+
+    <script src="js/script.js"></script>
+	
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+		var insertDeleteWishList = function(movie_no) {
+			var targetId = 'movieWish'+movie_no;
+			$.ajax({
+				url:'wishList',
+				data:'movie_no='+movie_no,
+				method:'GET',
+				dataType:'text',
+				success:function(result) {
+					if(result=="success"){
+						$("a[id='"+targetId+"'] i").attr('class','fas fa-heart');
+						$("a[id='"+targetId+"'] i").attr('style','color:red');
+				    	$('#wishListToast').on('show.bs.toast',function(e){
+				    		$(e.target).find('.toast-body').html('위시리스트에 등록되었습니다.');
+				    	});
+				    	
+					}else{
+						$("a[id='"+targetId+"'] i").attr('class','far fa-heart');
+						$("a[id='"+targetId+"'] i").attr('style','color:white');
+				    	$('#wishListToast').on('show.bs.toast',function(e){
+				    		$(e.target).find('.toast-body').html('위시리스트에 삭제되었습니다.');
+				    	});
+				    	window.location.reload();
+					}
+					$('#wishListToast').toast('show');
+				}
+			});
+		}
+	/*]]>*/
+	</script>
+
+</body>
+
+</html>

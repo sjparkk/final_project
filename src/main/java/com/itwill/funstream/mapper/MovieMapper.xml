@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.funstream.mapper.MovieMapper">
+   <!-- movie -->
+   <select id="findMovieListOrderByCountDesc" resultType="com.itwill.funstream.domain.Movie">
+      select * from movie order by movie_count desc
+   </select>
+   
+   <select id="findMovieListCountBySearch" resultType="int">
+   		select count(*) from movie where movie_title like '%'||#{searchWord}||'%'
+   </select>
+   
+   <select id="findMovieListBySearch" resultType="com.itwill.funstream.domain.Movie">
+   	  select * from
+   	  (select rownum idx,p.* from
+      (select * from movie where movie_title like '%'||#{searchWord}||'%')p) where idx &gt;=#{start} and idx &lt;=#{last}
+   </select>
+   
+   <select id="findMovieListBySearchAndUserNo" resultMap="findMovieListByGenreNoAndUserNoMap">
+   	  select * from
+   	  (select rownum idx,p.* from
+      (select m.movie_no,m.movie_title,m.movie_img,m.movie_rating,m.movie_count,m.movie_opendate,m.movie_runtime,u.user_no from movie m
+      left outer join userinfo_movie um
+      on m.movie_no=um.movie_no and um.user_no=#{user_no}
+      left outer join userinfo u
+      on um.user_no=u.user_no
+      where movie_title like '%'||#{searchWord}||'%')p) where idx &gt;=#{start} and idx &lt;=#{last}
+   </select>
+   
+   <select id="findMovieListCountByGenreNo" parameterType="int" resultType="int">
+      select count(*) from movie m
+      join movie_genre mg
+      on m.movie_no=mg.movie_no
+      where mg.genre_no=#{genre_no}
+      order by m.movie_count desc
+   </select>
+   
+   <select id="findMovieListByGenreNo" resultType="com.itwill.funstream.domain.Movie">
+      select * from
+      (select rownum idx,p.* from
+      (select m.* from movie m
+      join movie_genre mg
+      on m.movie_no=mg.movie_no
+      where mg.genre_no=#{genre_no}
+      order by m.movie_count desc) p) where idx &gt;=#{start} and idx &lt;=#{last}
+    </select>
+    
+   <resultMap type="com.itwill.funstream.domain.Movie" id="findMovieListByGenreNoAndUserNoMap" autoMapping="true">
+   		<result property="movie_no" column="movie_no"/>
+   		<result property="movie_title" column="movie_title"/>
+   		<result property="movie_img" column="movie_img"/>
+   		<result property="movie_rating" column="movie_rating"/>
+   		<result property="movie_count" column="movie_count"/>
+   		<result property="movie_opendate" column="movie_opendate"/>
+   		<result property="movie_runtime" column="movie_runtime"/>
+   		<collection property="userList" javaType="List" ofType="com.itwill.funstream.domain.UserInfo" autoMapping="true">
+   			<result property="user_no" column="user_no"/>
+   		</collection>
+   </resultMap>
+   <select id="findMovieListByGenreNoAndUserNo" resultMap="findMovieListByGenreNoAndUserNoMap">
+      select * from
+      (select rownum idx,p.* from
+      (select m.movie_no,m.movie_title,m.movie_img,m.movie_rating,m.movie_count,m.movie_opendate,m.movie_runtime,u.user_no from movie m
+      left outer join movie_genre mg
+      on m.movie_no=mg.movie_no
+      left outer join userinfo_movie um
+      on um.movie_no=m.movie_no and um.user_no=#{user_no}
+      left outer join userinfo u
+      on um.user_no = u.user_no
+      where mg.genre_no=#{genre_no}
+      order by m.movie_count desc) p) where idx &gt;=#{start} and idx &lt;=#{last}
+    </select>
+    
+   <select id="findFourMovieListByGenreNo" resultType="com.itwill.funstream.domain.Movie">
+      select * from
+       (select rownum idx, p.* from
+             (select m.* from movie m
+             join movie_genre mg
+             on m.movie_no=mg.movie_no
+             where mg.genre_no=#{genre_no}
+             order by m.movie_count desc) p)
+        where idx &gt;= 1 and idx &lt;= 4
+   </select>
+   
+   <select id="findFourMovieListByGenreNoAndUserNo" resultMap="findMovieListByGenreNoAndUserNoMap">
+      select * from
+	      (select rownum idx,p.* from
+	      (select m.movie_no,m.movie_title,m.movie_img,m.movie_rating,m.movie_count,m.movie_opendate,m.movie_runtime,u.user_no 
+	      from movie m
+	      left outer join movie_genre mg
+	      on m.movie_no=mg.movie_no
+	      left outer join userinfo_movie um
+	      on um.movie_no=m.movie_no and um.user_no=#{user_no}
+	      left outer join userinfo u
+	      on um.user_no = u.user_no
+	      where mg.genre_no=#{genre_no}
+	      order by m.movie_count desc) p) 
+      where idx &gt;=1 and idx &lt;=4
+   </select>
+   
+   <resultMap type="com.itwill.funstream.domain.Movie" id="findMovieDetailByMovieNoMap" autoMapping="true">
+      <association property="movieDetail" javaType="com.itwill.funstream.domain.MovieDetail" autoMapping="true"></association>
+   </resultMap>
+   <select id="findMovieDetailByMovieNo" resultMap="findMovieDetailByMovieNoMap">
+      select m.*,md.md_no,md.md_summary,md.md_director,md.md_actors,md.md_film,md.md_subfilm from movie m
+      join moviedetail md
+      on m.movie_no=md.movie_no
+      where m.movie_no=#{movie_no}
+   </select>
+   <select id="findGenreNameByMovieNo" resultType="com.itwill.funstream.domain.Genre">
+        select g.* from genre g
+        join movie_genre mg
+        on g.genre_no=mg.genre_no
+        where movie_no=#{movie_no}
+   </select>
+   <resultMap type="com.itwill.funstream.domain.Genre" id="findGenreListByUserNoMap" autoMapping="true">
+      <collection property="movieList" ofType="com.itwill.funstream.domain.Movie" autoMapping="true">
+         <association property="movie_no" column="movie_no" autoMapping="true"></association>
+      </collection>
+   </resultMap>
+   <select id="findGenreListByUserNo" resultType="com.itwill.funstream.domain.Genre">
+       select g.*,mg.movie_no from genre g
+      join movie_genre mg
+      on g.genre_no=mg.genre_no
+      join userinfo_movie um
+      on um.movie_no = mg.movie_no
+      where um.user_no=#{user_no}
+   </select>
+   <update id="updateMovieCountByMovieNo" parameterType="int">
+      update movie set movie_count=movie_count+1 where movie_no=#{movie_no}
+   </update>
+   <!-- userinfo_movie -->
+   <select id="findMovieWishListCountByUserNo" parameterType="int" resultType="int">
+      select count(*) cnt from userinfo_movie where user_no=#{user_no}
+   </select>
+   <select id="findMovieWishListByUserNo" resultType="com.itwill.funstream.domain.Movie">
+    select * from
+   (select rownum idx, p.* from
+   (select * from userinfo_movie um
+   join movie m
+   on um.movie_no=m.movie_no
+   order by m.movie_count desc) p
+   where user_no=#{user_no})
+   where idx &gt;=#{start} and idx &lt;=#{last}
+   </select>
+   <insert id="insertUserInfoMovie" parameterType="com.itwill.funstream.domain.UserInfoMovie">
+      insert into userinfo_movie values(USERINFO_MOVIE_WISHLIST_NO_SEQ.nextval,#{userInfo.user_no},#{movie.movie_no})
+   </insert>
+   <delete id="deleteUserInfoMovie">
+      delete userinfo_movie where user_no=#{user_no} and movie_no=#{movie_no}
+   </delete>
+   <select id="findUserInfoMovie" resultType="int">
+   	  select count(*) from userinfo_movie where user_no=#{user_no} and movie_no=#{movie_no}
+   </select>
+    
+    <!-- movie detail CRUD -->
+    <insert id="insertMovieDetail" parameterType="com.itwill.funstream.domain.MovieDetail">
+       insert into moviedetail values(MOVIEDETAIL_MD_NO_SEQ.nextval,#{md_summary},#{md_director},#{md_actors},#{md_film},#{md_subfilm},#{movie.movie_no})
+    </insert>
+    
+    <update id="updateMovieDetailByMovieNo" parameterType="com.itwill.funstream.domain.MovieDetail">
+       update moviedetail set md_summary=#{md_summary},md_director=#{md_director},md_actors=#{md_actors},md_film=#{md_film},md_subfilm=#{md_subfilm} where movie_no=#{movie.movie_no}
+    </update>
+    
+    <delete id="deleteMovieDetailByMovieNo" parameterType="int">
+       delete from moviedetail WHERE movie_no=#{movie_no}
+    </delete>
+    
+    
+       <!-- movie CRUD -->
+   
+   <insert id="insertMovie" parameterType="com.itwill.funstream.domain.Movie">
+      insert into movie(MOVIE_NO,MOVIE_TITLE,MOVIE_IMG,MOVIE_RATING,MOVIE_COUNT,MOVIE_OPENDATE,MOVIE_RUNTIME)
+      values(MOVIE_MOVIE_NO_SEQ.nextval,#{movie_title},#{movie_img},#{movie_rating},#{movie_count},#{movie_opendate},#{movie_runtime})
+   </insert>
+   
+   <update id="updateMovieByNo" parameterType="com.itwill.funstream.domain.Movie">
+      update Movie set
+      MOVIE_TITLE=#{movie_title},
+      MOVIE_IMG=#{movie_img},
+      MOVIE_RATING=#{movie_rating},
+      MOVIE_COUNT=#{movie_count},
+        MOVIE_OPENDATE =#{movie_opendate},
+        MOVIE_RUNTIME = #{movie_runtime}
+        where MOVIE_NO=#{movie_no}
+   </update>
+   
+   <select id="selectMovieCountAll" parameterType="int" resultType="int">
+      select count(*) from movie
+   </select>
+   
+   
+   <select id="selectMovieAll" resultType="com.itwill.funstream.domain.Movie">
+      select * from
+      (select rownum idx, p.* from 
+      (select * from movie order by movie_count desc) p)
+      where idx &gt;=#{start} and idx &lt;=#{last}
+   </select>
+   
+   <select id="selectMovieAllAndUserNo" resultMap="findMovieListByGenreNoAndUserNoMap">
+      select * from
+      (select rownum idx, p.* from 
+      (select m.movie_no,m.movie_title,m.movie_img,m.movie_rating,m.movie_count,m.movie_opendate,m.movie_runtime,u.user_no from movie m
+      left outer join userinfo_movie um
+      on m.movie_no=um.movie_no and um.user_no=#{user_no}
+      left outer join userinfo u
+      on um.user_no=u.user_no
+      order by movie_count desc) p)
+      where idx &gt;=#{start} and idx &lt;=#{last}
+   </select>
+   
+   <select id="selectMovieByNo" parameterType="int" resultType="com.itwill.funstream.domain.Movie">
+      select * from movie where movie_no = #{movie_no}
+   </select>
+   
+   <delete id="deleteMovieByNo" parameterType="int">
+      delete from movie where movie_no = #{movie_no}
+   </delete>
+   
+   
+   <!-- genre CRUD -->
+   
+   <insert id="insertGenre" parameterType="com.itwill.funstream.domain.Genre">
+      insert into Genre(genre_no, genre_name) 
+      values (GENRE_GENRE_NO_SEQ.nextval, #{genre_name})
+   </insert>
+   
+   <update id="updateGenreByNo" parameterType="com.itwill.funstream.domain.Genre">
+      update Genre set
+      GENRE_NAME = #{genre_name}
+        where genre_NO= #{genre_no}
+   </update>
+   
+   <select id="selectGenreByNo" parameterType="int" resultType="com.itwill.funstream.domain.Genre">
+      select * from Genre where genre_no=#{genre_no}
+   </select>
+   
+   <select id="selectGenreAll" resultType="com.itwill.funstream.domain.Genre">
+      select * from Genre
+   </select>
+   
+   <delete id="deleteGenreByNo" parameterType="int">
+      delete from Genre where genre_no = #{genre_no}
+   </delete>
+   
+   <!-- movie_genre CRUD -->
+   <insert id="insertMovieGenre">
+      insert into movie_genre values(MOVIE_GENRE_MG_NO_SEQ.nextval,#{movie_no},#{genre_no})
+   </insert>
+   
+   <delete id="deleteMovieGenre">
+      delete from movie_genre where movie_no=#{movie_no} and genre_no=#{genre_no}
+   </delete>
+   
+   <select id="findGenreNoByMovieNo" parameterType="int" resultType="int">
+      select genre_no from movie_genre where movie_no = #{movie_no}
+   </select>
+   
+    
+    <!-- 추가 -->
+    <!-- 장르번호로 장르이름 찾기 -->
+    <select id="findGenreNameByGenreNo" resultType="String" parameterType="int">
+       select genre_name from genre where genre_no=#{genre_no}
+    </select>
+    
+       <select id="selectGenreNameByMovieNo" resultType="String">
+        select g.genre_name from genre g
+        join movie_genre mg
+        on g.genre_no=mg.genre_no
+        where movie_no=#{movie_no}
+   </select>
+</mapper>

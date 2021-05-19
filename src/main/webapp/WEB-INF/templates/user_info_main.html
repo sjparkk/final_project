@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="keywords"
+	content="Streamlab - Video Streaming HTML5 Template" />
+<meta name="description"
+	content="Streamlab - Video Streaming HTML5 Template" />
+<meta name="author" content="StreamLab" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Streamlab - Video Streaming HTML5 Template</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="images/favicon.png">
+<!-- CSS bootstrap-->
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<!--  Style -->
+<link rel="stylesheet" href="css/style.css" />
+<!--  Responsive -->
+<link rel="stylesheet" href="css/responsive.css" />
+<link rel="stylesheet" href="css/custom_main.css" />
+
+
+
+</head>
+
+<body>
+
+	<!-- preferedTheater Toast start -->
+	<div id="preferedTheater" th:insert="include_common::preferedTheater"></div>
+	<!-- preferedTheater Toast end -->
+
+	<!--=========== Loader =============-->
+	<div id="gen-loading">
+		<div id="gen-loading-center">
+			<img src="images/logo-1.png" alt="loading">
+		</div>
+	</div>
+	<!--=========== Loader =============-->
+
+	<!--========== Header ==============-->
+	<div th:include="include_common::top"></div>
+	<!--========== Header ==============-->
+
+	<!-- breadcrumb -->
+	<div class="gen-breadcrumb">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-12">
+					<nav aria-label="breadcrumb">
+						<div class="gen-breadcrumb-title">
+							<h1>My page</h1>
+						</div>
+						<div class="gen-breadcrumb-container">
+							<h2 th:text="${session.sUser.user_id}"></h2>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- breadcrumb -->
+
+	<!-- Blog-left-Sidebar -->
+	<section class="gen-section-padding-3">
+		<div class="container">
+			<div class="row">
+				<div class="col-xl-3 col-md-12 order-2 order-xl-1 mt-4 mt-xl-0">
+
+					<div class="widget widget_recent_entries" id="info_menu">
+						<h2 class="widget-title">내 정보</h2>
+						<ul>
+							<li><a id="menu_c" href="blog-single.html">회원정보수정</a></li>
+							<li><a id="menu_b" href="blog-single.html">선호영화관</a></li>
+							<li><a id="menu_d" href="blog-single.html">이용권관리</a></li>
+							<li><a id="menu_e" href="blog-single.html">카드관리</a></li>
+							<li><a id="menu_f" href="user_unregist_form">회원탈퇴</a></li>
+						</ul>
+					</div>
+
+				</div>
+
+				<div class="col-xl-9 col-md-12 order-1 order-xl-2"
+					id="user_info_content"></div>
+			</div>
+		</div>
+	</section>
+	<!-- Blog-left-Sidebar -->
+
+	<!-- footer start -->
+	<div th:include="include_common::bottom"></div>
+	<!-- footer End -->
+
+	<!-- Back-to-Top start -->
+	<div id="back-to-top">
+		<a class="top" id="top" href="#top"> <i class="ion-ios-arrow-up"></i>
+		</a>
+	</div>
+	<!-- Back-to-Top end -->
+
+	<!-- js-min -->
+	<script src="js/jquery-3.6.0.min.js"></script>
+	<script src="js/asyncloader.min.js"></script>
+	<!-- JS bootstrap -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- owl-carousel -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- counter-js -->
+	<script src="js/jquery.waypoints.min.js"></script>
+	<script src="js/jquery.counterup.min.js"></script>
+	<!-- popper-js -->
+	<script src="js/popper.min.js"></script>
+	<script src="js/swiper-bundle.min.js"></script>
+	<!-- Iscotop -->
+	<script src="js/isotope.pkgd.min.js"></script>
+
+	<script src="js/jquery.magnific-popup.min.js"></script>
+
+	<script src="js/slick.min.js"></script>
+
+	<script src="js/streamlab-core.js"></script>
+
+	<script src="js/script.js"></script>
+
+	<script type="text/javascript">
+		//user_prefered_theater
+		$('#info_menu #menu_b').click(function(e) {
+			user_prefered_theater_function();
+			e.preventDefault();
+		});
+
+		$('#info_menu #menu_c').click(function(e) {
+			user_modify_form_function();
+			e.preventDefault();
+		});
+
+		$('#info_menu #menu_d').click(function(e) {
+			user_subscribe_info_function();
+			e.preventDefault();
+		});
+
+		$('#info_menu #menu_e').click(function(e) {
+			user_card_manage_function();
+			e.preventDefault();
+		});
+
+		$('#user_info_content').on('click', '#user_modify_button', function(e) {
+			user_modify_check();
+			e.preventDefault();
+		});
+
+		$('#user_info_content').on('click', '#pay_card_change', function(e) {
+			user_subscribe_card_change_function();
+			e.preventDefault();
+		});
+
+		$('#user_info_content').on('click', '#user_card_regist', function(e) {
+			$('#user_info_content').load('user_card_regist.html');
+			e.preventDefault();
+		});
+
+		$('#user_info_content').on('click', '#userCardRegisterButton',
+				function(e) {
+					user_card_check();
+					e.preventDefault();
+				});
+
+		$("#user_info_content").on('click', '#cardf input[value="선택"]',
+				function(e) {
+					alert('카드를 변경하시겠습니까?');
+					$('#myModal').modal("hide");
+					user_subscribe_card_change_function();
+					e.preventDefault();
+				});
+
+		$('#user_info_content').on(
+				'click',
+				'.gen-price-detail .gen-button',
+				function(e) {
+					user_card_unregist_action_function(e.target
+							.getAttribute('card_no'));
+					e.preventDefault();
+				});
+
+		$('#user_info_content').on('click',
+				'.gen-register-form #cancle_autopay', function(e) {
+					user_autopay_cancle_function();
+					e.preventDefault();
+				});
+
+		function user_autopay_cancle_function() {
+			$.ajax({
+				url : 'user_autopay_cancle',
+				dataType : 'text',
+				success : function(text) {
+					if (text.trim() == 'success') {
+						user_subscribe_info_function();
+					} else if (text.trim() == 'fail') {
+						alert('자동결제해지실패');
+					}
+				}
+
+			});
+
+		}
+
+		function user_card_unregist_action_function(card_no) {
+			alert("삭제하시겠습니까?");
+			$.ajax({
+				url : 'user_card_remove_action',
+				data : 'card_no=' + card_no,
+				method : 'POST',
+				dataType : 'text',
+				success : function(text) {
+					if (text.trim() == 'success') {
+						user_card_manage_function();
+					} else if (text.trim() == 'fail') {
+						alert('삭제실패');
+					}
+				}
+			})
+		}
+
+		function user_card_check() {
+			var realNo_check = /^(\d{4})[-](\d{4})[-](\d{4})[-](\d{4})$/g;
+			var valid_check = /^(0[0-9]|1[012])[/](\d{2})$/g;
+			var password_check = /^(\d{4})$/g;
+			var cvc_check = /^(\d{3})$/g;
+
+			var phone_check = /(01[016789])[-](\d{4}|\d{3})[-]\d{4}$/g
+
+			if (document.userCardRegisterForm.card_realNo.value == "") {
+				alert("카드번호를 입력해주세요");
+				document.userCardRegisterForm.card_realNo.focus();
+				return false;
+			}
+
+			if (!realNo_check
+					.test(document.userCardRegisterForm.card_realNo.value)) {
+				alert("유효하지 않은 카드번호입니다.")
+				document.userCardRegisterForm.card_realNo.focus();
+				return false;
+			}
+
+			if (document.userCardRegisterForm.card_valid.value == "") {
+				alert("유효기간을 입력해주세요");
+				document.userCardRegisterForm.card_valid.focus();
+				return false;
+			}
+
+			if (!valid_check
+					.test(document.userCardRegisterForm.card_valid.value)) {
+				alert("유효하지 않은 유효기간입니다.")
+				document.userCardRegisterForm.card_valid.focus();
+				return false;
+			}
+
+			if (document.userCardRegisterForm.card_password.value == "") {
+				alert("카드비밀번호를 입력해주세요");
+				document.userCardRegisterForm.card_password.focus();
+				return false;
+			}
+
+			if (!password_check
+					.test(document.userCardRegisterForm.card_password.value)) {
+				alert("유효하지 않은 비밀번호입니다.")
+				document.userCardRegisterForm.card_password.focus();
+				return false;
+			}
+
+			if (document.userCardRegisterForm.card_cvc.value == "") {
+				alert("CVC번호를 입력해주세요");
+				document.userCardRegisterForm.card_cvc.focus();
+				return false;
+			}
+
+			if (!cvc_check.test(document.userCardRegisterForm.card_cvc.value)) {
+				alert("유효하지 않은 CVC번호입니다.")
+				document.userCardRegisterForm.card_cvc.focus();
+				return false;
+			}
+
+			user_card_regist_action_function();
+		}
+
+		function user_card_regist_action_function() {
+			$.ajax({
+				url : 'user_card_add_action',
+				data : $('#user_card_register_form').serialize(),
+				method : 'POST',
+				dataType : 'text',
+				success : function(text) {
+					if (text.trim() == 'success') {
+						user_card_manage_function();
+					} else if (text.trim() == 'fail') {
+						alert('등록실패');
+					}
+				}
+			});
+		}
+
+		function user_subscribe_card_change_function() {
+			console.log($('#card option:selected').val());
+			$.ajax({
+				url : 'user_changeAutoPayCard_action',
+				data : 'card.card_no=' + $('#card option:selected').val(),
+				method : 'POST',
+				dataType : 'text',
+				success : function(text) {
+					if (text.trim() == 'success') {
+						user_subscribe_info_function();
+					} else if (text.trim() == 'fail') {
+						alert('변경실패');
+					}
+				}
+			});
+		}
+
+		function user_modify_form_function() {
+			$.ajax({
+				url : 'user_info_find',
+				method : 'GET',
+				datatype : 'json',
+				success : function(userInfo) {
+					$('#user_info_content').load('user_modify_form.html',
+							function() {
+								$('#pms_user_login').val(userInfo.user_id);
+								$('#pms_user_email').val(userInfo.user_phone);
+							});
+				}
+			});
+		}
+
+		function user_subscribe_info_function() {
+			$.ajax({
+				url : 'user_subscribe_find',
+				method : 'GET',
+				dataType : 'json',
+				success : function(subsUserInfo) {
+					var redate = new Date(subsUserInfo.sUser_reDate);
+					var enddate = new Date(subsUserInfo.sUser_reDate - 86400);
+					$('#user_info_content').load(
+							'user_subscribe_info.html',
+							function() {
+								if (subsUserInfo.sUSer_autoPay.trim() == 'true') {
+									$('#suser_redate').html(
+											redate.toLocaleDateString());
+								user_card_list(subsUserInfo);
+								subscribe_info_card_list_modal(subsUserInfo);
+								$('#card_change_table').html('<button id="change_autopay_card" type="button"class="btn btn-primary" data-toggle="modal"data-target="#myModal">카드 변경</button>');
+								$('#card_cancle_table').html('<button id="cancle_autopay" type="button"class="btn btn-secondary">자동결제해지</button>');
+								}
+								$('#subs_no').html(
+										subsUserInfo.subscribe.subs_type);
+								$('#suser_enddate').html(
+										enddate.toLocaleDateString());
+							});
+				}
+			});
+		}
+
+		function subscribe_info_card_list_modal(subsUserInfo) {
+			$.ajax({
+				url : 'user_card_manage',
+				data : 'user_no=' + subsUserInfo.userInfo.user_no,
+				method : 'GET',
+				datatype : 'json',
+				success : function(cardList) {
+					var html = '';
+					$.each(cardList, function(i, card) {
+						html += '<option value="'+card.card_no+'">'
+								+ card.card_alias + '</option>'
+					});
+					$('#card').html(html);
+				}
+			});
+		}
+
+		function user_card_list(subsUserInfo) {
+			$.ajax({
+				url : 'user_card_find',
+				data : 'card_no=' + subsUserInfo.card.card_no,
+				method : 'GET',
+				dataType : 'json',
+				success : function(card) {
+					var cardNo = (card.card_realNo).substr(0, 4)
+							+ '-****-****-' + (card.card_realNo).substr(15, 4);
+					$('#cardA').html(card.card_alias);
+					$('#cardRN').html(cardNo);
+				}
+
+			});
+		}
+
+		function user_card_manage_function() {
+			$
+					.ajax({
+						url : 'user_card_manage',
+						method : 'GET',
+						datatype : 'json',
+						success : function(cardList) {
+							var html = '';
+							$('#user_info_content')
+									.load(
+											'user_card.html',
+											function() {
+												$
+														.each(
+																cardList,
+																function(i,
+																		card) {
+																	html += '<div class="col-xl-4 col-lg-4 col-md-4" style="padding-bottom: 30px"><div class="gen-price-block text-center"><div class="gen-price-detail"><span class="gen-price-title">'
+																			+ card.card_alias
+																			+ '</span><p class="gen-price-duration">'
+																			+ (card.card_realNo)
+																					.substr(
+																							0,
+																							4)
+																			+ '-****-****-'
+																			+ (card.card_realNo)
+																					.substr(
+																							15,
+																							4)
+																			+ '</p><a href="#" class="gen-button gen-button-flat"  card_no='+card.card_no+' >삭제</a></div></div></div>'
+																});
+												$('#user_card_list').html(html);
+											});
+						}
+					});
+		}
+
+		function user_modify_check() {
+			var phone_check = /(01[016789])[-](\d{4}|\d{3})[-]\d{4}$/g;
+
+			if (document.userModifyForm.user_phone.value == "") {
+				alert("전화번호를 입력해주세요");
+				document.userModifyForm.user_phone.focus();
+				return false;
+			}
+
+			if (!phone_check.test(document.userModifyForm.user_phone.value)) {
+				alert("전화번호의 형식이 맞지 않습니다");
+				document.userModifyForm.user_phone.focus();
+				return false;
+			}
+
+			if (document.userModifyForm.user_password.value != document.userModifyForm.user_repeat_password.value) {
+				alert("비밀번호가 일치하지 않습니다");
+				document.userModifyForm.user_password.focus();
+				document.userModifyForm.user_password.select();
+				return false;
+			}
+
+			user_modify_action_function();
+
+		}
+
+		function user_modify_action_function() {
+			$.ajax({
+				url : 'user_modify_action',
+				data : $('#pms_register-form').serialize(),
+				method : 'POST',
+				success : function(text) {
+					if (text.trim() == 'success') {
+						user_subscribe_info_function();
+					} else if (text.trim() == 'fail') {
+						alert('수정실패');
+					}
+				}
+			});
+		}
+
+		//선호영화관 유무확인
+		function user_prefered_theater_function() {
+			$.ajax({
+				url : 'user_prefered_theater_find',
+				method : 'GET',
+				success : function(isExist) {
+					if (isExist.trim() == 'success') {
+						user_prefered_theater_list_function();
+					} else {
+						user_prefered_theater_form();
+					}
+				}
+			});
+		}
+
+		//선호영화관 있을시
+		function user_prefered_theater_list_function() {
+			$
+					.ajax({
+						url : 'user_prefered_theater_list',
+						method : 'GET',
+						dataType : 'json',
+						success : function(map) {
+							var html1 = '';
+							var html2 = '';
+							$('#user_info_content')
+									.load(
+											'user_prefer_theater_form.html',
+											function() {
+												$
+														.each(
+																map.theaterNameList,
+																function(i,
+																		theater) {
+																	html1 += "<option id='theater_no' value='"+theater.theater_no+"'>"
+																			+ theater.theater_name
+																			+ "</option>"
+																});
+												$('#theater_name_list').html(
+														html1);
+
+												$
+														.each(
+																map.preferedTheaterList,
+																function(i,
+																		theater) {
+																	html2 += "<tr><td>"
+																			+ theater.theater_name
+																			+ "</td>"
+																	html2 += "<td class='theater_delete'>"
+																	html2 += "<input type='button' value='삭제' prefer_no="+theater.userInfoTheater.prefer_no+"></td></tr>"
+																});
+												$('#prefered_theater_list')
+														.html(html2);
+											});
+						}
+					});
+		}
+
+		//선호영화관 없을때 등록폼
+		function user_prefered_theater_form() {
+			$
+					.ajax({
+						url : 'user_prefered_theater_form',
+						method : 'GET',
+						success : function(theaterNameList) {
+							var html = '';
+							$('#user_info_content')
+									.load(
+											'user_prefer_theater_form.html',
+											function() {
+												$
+														.each(
+																theaterNameList,
+																function(i,
+																		theater) {
+																	html += "<option id='theater_no' value='"+theater.theater_no+"'>"
+																			+ theater.theater_name
+																			+ "</option>"
+																});
+												$('#theater_name_list').html(
+														html);
+												$('#f').hide();
+											});
+						}
+					});
+		}
+
+		//선호영화등록Action
+		function user_prefered_theater_insert_action(theater_no) {
+			$.ajax({
+				url : 'user_prefered_theater_insert_action',
+				data : 'theater_no=' + theater_no,
+				method : 'GET',
+				success : function(msg) {
+					if (msg.trim() == 'success') {
+						user_prefered_theater_function();
+					} else {
+						$('#preferedTheaterToast').on(
+								'show.bs.toast',
+								function(e) {
+									$(e.target).find('.toast-body').html(
+											'최대3개까지 등록이 가능합니다.');
+								});
+						$('#preferedTheaterToast').toast('show');
+						$('#preferedTheaterToast').on('hide.bs.toast',
+								function(e) {
+									user_prefered_theater_list_function();
+								});
+
+					}
+				}
+			});
+		}
+		$('#user_info_content').on(
+				'click',
+				'#theater_insert',
+				function(e) {
+					var theater_no = document
+							.getElementById('theater_name_list').value;
+					user_prefered_theater_insert_action(document
+							.getElementById('theater_name_list').value);
+					e.preventDefault();
+				});
+
+		//선호영화관삭제Action
+		function user_prefered_theater_delete_action(prefer_no) {
+			$.ajax({
+				url : 'user_prefered_theater_delete_action',
+				method : 'GET',
+				data : 'prefer_no=' + prefer_no,
+				success : function(msg) {
+					if (msg.trim() == "success") {
+						user_prefered_theater_function();
+					}
+				}
+			});
+		}
+		$('#user_info_content').on(
+				'click',
+				".theater_delete input[value='삭제']",
+				function(e) {
+					user_prefered_theater_delete_action(this
+							.getAttribute('prefer_no'));
+				});
+	</script>
+</body>
+
+</html>

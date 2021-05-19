@@ -1,0 +1,37 @@
+
+<h3 class="fa fa-film" aria-hidden="true"> 선호영화관 등록</h3>
+<table>
+	<tr>
+		<td>
+			<!-- 
+			<p class="widget-title"></p> 
+			 -->
+			<select id="theater_name_list">
+				<option id="theater_no" value="theater_no">강남</option>
+		</select>
+		</td>
+		<td><input type="button" id="theater_insert" value="선호영화관등록" />
+		</td>
+	</tr>
+</table>
+<br>
+<div id='f'>
+	<h3 class="fa fa-list-ul" aria-hidden="true"> 선호영화관 목록</h3>
+	<table id='prefered_theater_list'>
+		<tr>
+			<td>선호영화관</td>
+			<td>비고</td>
+		</tr>
+		<!-- 선호영화관 start -->
+		<tr>
+			<td>강남점</td>
+			<td>
+				<form action="preferTheater_remove_action" method="post">
+					<input type="hidden" name="theater_no" value="1"> <input
+						type="submit" value="삭제">
+				</form>
+			</td>
+		</tr>
+		<!-- 선호영화관 end -->
+	</table>
+</div>

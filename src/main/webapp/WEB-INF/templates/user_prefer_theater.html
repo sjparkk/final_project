@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>선호영화관</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript">
+	function removeTheater() {
+		document.f.action = "preferTheater_remove_action";
+		document.f.method = 'POST';
+		document.f.submit();
+	}
+
+
+</script>
+</head>
+<body>
+
+	<form action="user_prefer_theater_insert_action">
+			<p>선호영화관을 선택해주세요.</p>
+			<select name="dsfsdfs">
+				<option value="강남">강남</option>
+				<option value="왕십리">왕십리</option>
+				<option value="영등포">영등포</option>
+			</select>
+			<input type="submit" value="선호영화관등록" />
+	</form>
+
+	<!--form-->
+	<!--<form name="f" method="post"> -->
+	<div id='f'>
+		<table>
+			<tr>
+				<td>선호영화관</td>
+				<td>비고</td>
+			</tr>
+
+			<!-- 선호영화관 start -->
+			<tr th:each="theater:${theaterList}">
+				<td th:text="${theater.theater_name}">강남점</td>
+				<td th:texh="${theater.theater_no}" name="prefer_no">1</td>
+				<td>
+					<form action="preferTheater_remove_action" method="post">
+						<input type="submit" value="삭제">
+					</form>
+				</td>
+			</tr>
+			<!-- 선호영화관 end -->
+
+
+		</table>
+
+	</div>
+
+</body>
+</html>

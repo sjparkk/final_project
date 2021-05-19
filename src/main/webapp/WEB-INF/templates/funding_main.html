@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="description" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="author" content="StreamLab" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>FunStream - Funding Main </title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.png">
+    <!-- CSS bootstrap-->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <!--  Style -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!--  Responsive -->
+	<link rel="stylesheet" href="css/responsive.css" />
+	
+	<style>
+	#img11 {
+		width: 42%;
+		height: 42%;
+	}
+	</style>
+	
+
+</head>
+
+<body>
+
+    <!--=========== Loader =============-->
+    <div id="gen-loading">
+        <div id="gen-loading-center">
+            <img src="images/logo-1.png" alt="loading">
+        </div>
+    </div>
+    <!--=========== Loader =============-->
+
+    <!--========== Header ==============-->
+    <div id="header" th:insert="include_common::top">
+    </div>
+    
+    <!-- breadcrumb -->
+    <div class="gen-breadcrumb" style="background-image: url('images/background/asset-25.jpeg');">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <div class="gen-breadcrumb-title">
+                            <h1>
+                                Funding
+                            </h1>
+                        </div>
+                        <div class="gen-breadcrumb-container">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="funding_main"><i
+                                            class="fas fa-home mr-2"></i>Home</a></li>
+                                <li class="breadcrumb-item active">Funding</li>
+                            </ol>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb -->
+
+    <!-- owl-carousel Banner Start -->
+	<section class="pt-0 pb-0">
+		<div class="container-fluid px-0">
+			<div class="row no-gutters">
+				<div class="col-12">
+					<div class="gen-banner-movies banner-style-3">
+						<div class="owl-carousel owl-loaded owl-drag" data-dots="false"
+							data-nav="true" data-desk_num="1" data-lap_num="1"
+							data-tab_num="1" data-mob_num="1" data-mob_sm="1"
+							data-autoplay="true" data-loop="true" data-margin="0">
+							<th:block th:each="movie:${percentList}">
+								<div class="container h-100">
+									<div class="row justify-content-center h-100">
+										<img id="img11" th:src="@{/img/movie/}+${movie.movie.movie_img}" alt="streamlab-image" >
+											<div class="gen-movie-info" style= "margin-left: 15px">
+												<br><br><br><br><br>
+												<h3 th:text="${movie.movie.movie_title}"></h3>
+												<br>
+												<h3 th:text="'~'+${#dates.format(movie.funding.funding_endDate, 'yyyy-MM-dd')} +' '+${#dates.dayOfWeekName(movie.funding.funding_endDate)}"></h3>
+												<br>
+												<h3 th:text="'달성률 '+${#numbers.formatDecimal((1.0 * movie.funding.funding_resvSeat / movie.funding.funding_totalSeat)*100, 1, 1)+'%'}"></h3> 
+												<br>
+												<h3 th:text="${movie.funding.funding_status}"></h3>
+												<br>
+												<button type="button" class="gen-button gen-button-flat" th:onclick="'location.href=\''+ @{funding_detail(funding_no=${movie.funding.funding_no})} + '\''">펀딩신청하기</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</th:block>
+						</div>
+					</div>
+				</div>
+			</div>
+	</section>
+	<!-- owl-carousel Banner End -->
+	
+<!-- 선호영화관 시작 -->	
+<!-- owl-carousel Videos Section-1 Start -->
+   <section class="gen-section-padding-2" th:if="${fundingListByPreferedTheater.size()!=0}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6">
+               <h2 class="gen-heading-title">선호 영화관</h2>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 d-none d-md-inline-block">
+               <div class="gen-movie-action">
+                  <div class="gen-btn-container text-right">
+                  <!-- 
+                     <a href="tv-shows-pagination.html" class="gen-button gen-button-flat">
+                        <span class="text">More Videos</span>
+                     </a>
+                   -->                  
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row mt-3">
+            <div class="col-12">
+               <div class="gen-style-2">
+                  <div class="owl-carousel owl-loaded owl-drag" data-dots="false" data-nav="true" data-desk_num="4"
+                     data-lap_num="3" data-tab_num="2" data-mob_num="1" data-mob_sm="1" data-autoplay="false"
+                     data-loop="false" data-margin="30">
+                     <th:block th:each="theaterList:${fundingListByPreferedTheater}">                    	
+                     <div class="item" th:each="f:${theaterList}">                    	
+                        <div
+                           class="movie type-movie status-publish has-post-thumbnail hentry movie_genre-action movie_genre-adventure movie_genre-drama">
+                           <div class="gen-carousel-movies-style-2 movie-grid style-2">
+                              <div class="gen-movie-contain">
+												<div class="gen-movie-img">
+													<img th:src="@{/img/movie/}+${f.movie.movie_img}"
+														alt="owl-carousel-video-image">
+													<div class="gen-movie-add">
+														<div class="movie-actions--link_add-to-playlist dropdown">
+															<div class="dropdown-menu mCustomScrollbar">
+																<div class="mCustomScrollBox">
+																	<div class="mCSB_container">
+																		<a class="login-link" href="register.html">Sign in
+																			to add this movie to a playlist.</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="gen-movie-action">
+														<a th:href="@{funding_detail(funding_no=${f.funding.funding_no})}"
+															class="gen-button"> 
+															<i class="fa fa-check"style="font-size: 24px"></i>
+														</a>
+													</div>
+												</div>
+												<div class="gen-info-contain">
+                                    <div class="gen-movie-info">
+                                       <h3 th:text="${f.movie.movie_title}"><a href="single-movie.html">The
+                                             warrior life</a>
+                                       </h3>
+                                    </div>
+                                    <div class="gen-movie-meta-holder">
+                                       <ul>
+                                          <li th:text="${f.theater.theater_name}">2hr 00mins</li>
+                                          <li>
+                                             <a href="action.html" th:text="${f.movie.movie_runtime}" style="color: white"><span>Action</span></a>
+                                          </li>
+                                          <li th:text="${#numbers.formatDecimal((1.0 * f.funding.funding_resvSeat / f.funding.funding_totalSeat)*100, 1, 1)+'%'}" style="color:red">90.0%</li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- #post-## -->
+						</div>
+					 </th:block>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- owl-carousel Videos Section-1 End -->
+
+
+	<!-- 하단 정렬 필터 버튼 -->
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-6 col-lg-6 col-md-6">
+				<h4 class="gen-heading-title">Funding List</h4>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 d-none d-md-inline-block" align = "right">
+				<div class="btn-group btn-group-lg" role="group"
+					aria-label="Large button group">
+					<button type="button" name="align" class="btn btn-outline-dark"
+						style="background-color: red; float: right; color: white">이름순</button>
+					<button type="button" name="align" class="btn btn-outline-dark"
+						style="background-color: red; float: right; color: white">최신순</button>
+					<button type="button" name="align" class="btn btn-outline-dark"
+						style="background-color: red; float: right; color: white">마감순</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 하단 정렬 리스트 ajax -->
+	<!-- owl-carousel images Start -->
+	   <section class="gen-section-padding-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row" id="mymovielist">
+                       <!-- fundinglist list start -->
+                       
+                        <div class="col-xl-3 col-lg-4 col-md-6" th:each="f:${orderByTheaterName}" >
+                            <div class="gen-carousel-movies-style-2 movie-grid style-2">
+                                <div class="gen-movie-contain">
+									<div class="gen-movie-img">
+										<img th:src="@{/img/movie/}+${f.movie_img}"
+											alt="streamlab-image" height="1080" width="1920">
+										<div class="gen-movie-add">
+											<div class="movie-actions--link_add-to-playlist dropdown">
+												<div class="dropdown-menu mCustomScrollbar">
+													<div class="mCustomScrollBox">
+														<div class="mCSB_container">
+															<a class="login-link" href="#">Sign in to add this
+																movie to a playlist.</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="gen-movie-action">
+											<a th:href="@{funding_detail(funding_no=${f.funding_no})}"
+												class="gen-button"> <i class="fa fa-check"
+												style="font-size: 24px"></i>
+											</a>
+										</div>
+									</div>
+									<div class="gen-info-contain">
+                                        <div class="gen-movie-info">
+                                            <h3><a th:text="${f.movie_title}">영화제목</a></h3>
+                                        </div>
+                                        <div class="gen-movie-meta-holder">
+                                            <ul>
+                                                <li th:text="${f.theater_name}">강남</li>
+                                                <li>
+                                                    <a th:text="${f.movie_runtime}" style="color: white"><span>런타임</span></a>
+                                                </li>
+                                                <li th:text="${#numbers.formatDecimal((1.0 * f.funding_resvSeat / f.funding_totalSeat)*100, 1, 1)+'%'}" style="color:red">90.0%</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                  <!-- fundinglist end -->           
+            </div>
+            </div>
+            </div>
+        </div>
+    </section>
+    <!-- owl-carousel Videos Section-3 End -->
+
+    <!-- footer start -->
+    <div id="header" th:insert="include_common::bottom">
+    </div>
+    <!-- footer End -->
+
+    <!-- Back-to-Top start -->
+    <div id="back-to-top">
+        <a class="top" id="top" href="#top"> <i class="ion-ios-arrow-up"></i> </a>
+    </div>
+    <!-- Back-to-Top end -->
+
+    <!-- js-min -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/asyncloader.min.js"></script>
+    <!-- JS bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- owl-carousel -->
+    <script src="js/owl.carousel.min.js"></script>
+    <!-- counter-js -->
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <!-- popper-js -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/swiper-bundle.min.js"></script>
+    <!-- Iscotop -->
+    <script src="js/isotope.pkgd.min.js"></script>
+
+    <script src="js/jquery.magnific-popup.min.js"></script>
+
+    <script src="js/slick.min.js"></script>
+
+    <script src="js/streamlab-core.js"></script>
+
+    <script src="js/script.js"></script>
+    
+	<script th:inline="javascript">
+	
+	$("button[name='align']").click(function(){
+		var optionNo = $(this).index();
+		console.log(optionNo);
+		
+		$.ajax({
+	        url: "f_movie_list",
+	        type: "get",
+	        dataType: "html",
+	        data : {optionNo : optionNo},
+	        contentType : "application/json; charset=UTF-8",
+	        success: function(html) {					
+					$('#mymovielist').html(html);		
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					// alert("업로드 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+				}
+			});
+
+		});
+	</script>
+</body>
+
+</html>

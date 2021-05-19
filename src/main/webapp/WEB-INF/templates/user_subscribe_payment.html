@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta name="keywords"
+	content="Streamlab - Video Streaming HTML5 Template" />
+<meta name="description"
+	content="Streamlab - Video Streaming HTML5 Template" />
+<meta name="author" content="StreamLab" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Streamlab - Video Streaming HTML5 Template</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="images/favicon.png">
+<!-- CSS bootstrap-->
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<!--  Style -->
+<link rel="stylesheet" href="css/style.css" />
+<!--  Responsive -->
+<link rel="stylesheet" href="css/responsive.css" />
+</head>
+
+<body>
+
+	<!--=========== Loader =============-->
+	<div id="gen-loading">
+		<div id="gen-loading-center">
+			<img src="images/logo-1.png" alt="loading">
+		</div>
+	</div>
+	<!--=========== Loader =============-->
+	
+	<!-- ======modal====== -->
+
+	 
+	 <div class="modal" id="myModal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	
+	      <!-- Modal Header -->
+	      <div class="modal-header">
+	      		<h5 class="modal-title" id="ModalTitle">알림</h5>
+				</button>
+	      </div>
+	
+	      <!-- Modal body -->
+	       <div class="modal-body">
+	      		<div id = paymentMessage class="paymentMessage" style="color: white; padding-bottom: 30px;text-align: center;">
+					..
+		   		</div>
+	 	   </div>
+	    	<div class="modal-footer">
+				<input type="button" id="modalButton" value="확인" style=""/>
+			</div>
+	  </div>
+	</div>
+    </div>
+	<!--========== 등록 modal ==============-->
+	
+	 <div class="modal" id="cardModal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	
+	      <!-- Modal Header -->
+	      <div class="modal-header">
+	      		<h5 class="modal-title" id="ModalTitle">알림</h5>
+	      </div>
+	
+	      <!-- Modal body -->
+	      <form id="user_card_register_form">
+	       <div class="modal-body">
+	      		<div id = paymentMessage class="paymentMessage" style="color: white; padding-bottom: 30px;text-align: center;">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-12">
+								
+									<div>
+									<h4>카드등록</h4>
+									<p><label style="padding-top: 10px">카드번호</label><input id="user_card_regist_card_realNo"
+										name="card_realNo" type="text"></p>
+									<p><label style="padding-top: 10px">유효기간</label><input id="user_card_regist_card_valid"
+										name="card_valid" type="text"></p>
+									<p><label style="padding-top: 10px">비밀번호</label><input id="user_card_regist_card_password"
+										name="card_password" type="password"></p>
+									<p><label style="padding-top: 10px">CVC</label><input id="user_card_regist_card_cvc"
+										name="card_cvc" type="password"></p>
+									<p><label style="padding-top: 10px">카드이름</label><input id="user_card_regist_card_alias"
+										name="card_alias" type="text"></p></div>
+									
+									<!-- 
+									<div style="padding-top: 50px"><a href=""><input type="submit" value="등록"></a></div> 
+									 -->
+								
+							</div>
+						</div>
+					</div>
+		   		</div>
+	 	   </div>
+	    	<div class="modal-footer">
+				<input type="submit" id="cardModalButton" value="등록"/>
+			</div>
+			</form>
+	  </div>
+	</div>
+    </div>
+	
+    
+	   
+	<!--========== Header ==============-->
+	<div id="header" th:insert="include_common::top"></div>
+	<!--========== Header ==============-->
+
+	<!-- breadcrumb -->
+	<div class="gen-breadcrumb"
+		style="background-image: url('images/background/asset-25.jpeg');">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-12">
+					<nav aria-label="breadcrumb">
+						<div class="gen-breadcrumb-title">
+							<h1>이용권 구매</h1>
+						</div>
+
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- breadcrumb -->
+
+
+	<!-- Register -->
+	<section class="gen-section-padding-3 gen-library">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					
+						<div class="gen-order-title">
+							<h2 style="padding-bottom: 30px">주문내역</h2>
+						</div>
+						<div class="gen-login-form">
+							<table class="order-table">
+								<tbody>
+									<tr>
+										<th>이용권</th>
+										<td th:text ="${oneSubscribe.subs_type}">$12.49</td>
+									</tr>
+									<tr>
+										<th:block th:if="${oneSubscribe.subs_type}=='연간'">
+											<th>이용기간</th>
+											<td th:text ="${subscribeDate.subscribeStartDate}+' ~ '+${subscribeDate.yearEndDate}">
+												$250.49</td>
+										</th:block>
+										<th:block th:if="${oneSubscribe.subs_type}=='월간'">
+											<th>이용기간</th>
+											<td th:text ="${subscribeDate.subscribeStartDate}+' ~ '+${subscribeDate.monthEndDate}">
+												$250.49</td>
+										</th:block>
+										<th:block th:if="${oneSubscribe.subs_type}=='특별이벤트'">
+											<th>이용기간</th>
+											<td th:text ="${subscribeDate.subscribeStartDate}+' ~ '+${subscribeDate.eventEndDate}">$250.49</td>
+										</th:block>
+									</tr>
+									<tr>
+										<th>금액</th>
+										<td th:text ="${#numbers.formatInteger(oneSubscribe.subs_price,3,'COMMA')}+'원'"><strong>$250.49 </strong>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<h2 style="padding-top: 50px; padding-bottom: 30px;">결제 카드</h2>
+							<i></i>
+
+							<div class="container">
+							
+								<div class="accordion" id="accordionExample">
+								  <div th:each="card:${userCardList}" class="card">
+								    <div class="card-header" th:id="${'heading'+card.card_no}">
+								        <input th:text="${card.card_alias}" id="card_no" name="card_no" type="radio" th:value="${card.card_no}"
+												data-toggle="collapse" style="margin-bottom: 20px;margin-top: 20px;" th:data-target="${'#collapse'+card.card_no}"/>
+								    </div>
+								
+								    <div th:id="${'collapse'+card.card_no}" class="collapse" th:aria-labelledby="${'heading'+card.card_no}" data-parent="#accordionExample">
+								      <div class="card-body">
+										<div style="float: left; padding-left: 30px;">카드번호: </div>
+										<div style="float: left; padding-left: 10px;" th:text="${card.card_realNo}">카드번호</div>
+									  </div>
+								    </div>
+								  </div>
+	
+								</div>
+							
+							<!-- ============================ 
+							
+								<div class="row">
+									<div th:each="card:${userCardList}" class="col-sm-12">
+										
+											<input th:text="${card.card_alias}" id="card_no" name="card_no" type="radio" th:value="${card.card_no}"
+											data-toggle="collapse" style="margin-bottom: 20px;margin-top: 20px;" th:data-target="${'#collapse'+card.card_no}"/>
+											
+									
+										<div class="panel-group" id="accordion" aria-multiselectable="true">
+											<div class="panel panel-default">
+										
+												<div th:id="${'collapse'+card.card_no}" class="panel-collapse collapse" data-parent="#accordion">
+													<div class="panel-body">
+														<div style="float: left; padding-left: 30px;">카드번호: </div>
+														<div style="float: left; padding-left: 10px;" th:text="${card.card_realNo}">카드번호</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							-->
+								
+							</div>
+								<div class="custom-control custom-checkbox mt-4" style="padding-left: 0px;">
+									<input type="checkbox" id="autoPay" name="autoPay" class="mb-0" checked="checked">
+									<label class="d-inline-block">
+									자동 결제
+									</label>
+								</div>
+
+							<p style="margin-top: 30px;">
+								FunStream은 고객님의 개인정보를 철저히 보호하고 있습니다. <a href="#">개인 정보 수집 및 이용 약관</a>
+							</p>
+							<div class="custom-control custom-checkbox mt-4"
+							style="padding-left: 0px;">
+								<input type="checkbox" id="subscribeCheckbox" name="subscribeCheckbox" class="mb-0">
+								<label class="d-inline-block">
+								위 구매조건 확인 및 결제진행 동의
+								</label>
+							</div>
+						</div>
+						<form name="subf" id="subf" method="post" action="user_subscribe_payment_action">
+							<input type="hidden" id="subs_autoPay" name="subs_autoPay" value="false">
+							<input type="hidden" id="selected_card_no" name="selected_card_no" value="">
+							<input type="hidden" id="subs_no" name="subs_no" th:value="${subs_no}">
+							<input type="button" id="subscribePayment" name="subscribePayment" value="결제"
+								class="mb-0" onclick="subscribe_payment();">
+						</form>
+					
+				</div>
+			</div>
+		</div>
+	</section>
+
+	
+	<!-- Register -->
+
+	<!-- footer start -->
+	<div id="header" th:insert="include_common::bottom"></div>
+	<!-- footer End -->
+
+	<!-- Back-to-Top start -->
+	<div id="back-to-top">
+		<a class="top" id="top" href="#top"> <i class="ion-ios-arrow-up"></i>
+		</a>
+	</div>
+	<!-- Back-to-Top end -->
+
+	<!-- js-min -->
+	<script src="js/jquery-3.6.0.min.js"></script>
+	<script src="js/asyncloader.min.js"></script>
+	<!-- JS bootstrap -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- owl-carousel -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- counter-js -->
+	<script src="js/jquery.waypoints.min.js"></script>
+	<script src="js/jquery.counterup.min.js"></script>
+	<!-- popper-js -->
+	<script src="js/popper.min.js"></script>
+	<script src="js/swiper-bundle.min.js"></script>
+	<!-- Iscotop -->
+	<script src="js/isotope.pkgd.min.js"></script>
+
+	<script src="js/jquery.magnific-popup.min.js"></script>
+
+	<script src="js/slick.min.js"></script>
+
+	<script src="js/streamlab-core.js"></script>
+
+	<script src="js/script.js"></script>
+	
+	<script type="text/javascript">
+	
+		/**********************모달에서 카드등록*************************/
+		$('#cardModal').on('submit', '#user_card_register_form',function(e) {
+				user_card_regist_action_function();
+				e.preventDefault();
+			});
+		
+		function user_card_regist_action_function() {
+			$.ajax({
+				url : 'user_card_add_action',
+				data : $('#user_card_register_form').serialize(),
+				method : 'POST',
+				dataType : 'text',
+				success : function(text) {
+					if (text.trim() == 'success') {
+						$('#cardModal').modal('hide');
+						location.href = currentURL;
+					} else if (text.trim() == 'fail') {
+						$('#myModal').on('show.bs.modal',function(e) {
+							$(e.target).find('#paymentMessage').html('등록실패');
+						});
+						$('#modalButton').on('click', function() {
+							$('#myModal').modal('hide');
+						});
+					}
+				}
+			});
+		}
+		/***********************************************/
+
+		
+		/**********************카드유무확인*************************/
+		var currentURL = location.href;
+		if (cardList_check()== 'false') {
+			$('#myModal').on('show.bs.modal',function(e) {
+					$(e.target).find('#paymentMessage').html('등록된 카드가 없습니다. 카드를 등록해주세요.');
+			});
+
+			$('#myModal').modal('show');
+			$('#modalButton').on('click', function() {
+				$('#myModal').modal('hide');
+				//location.href = 'main_funstream';
+				/*모달 안의 모달*/
+				$('#cardModal').modal('show');
+
+			});
+		}
+
+		function cardList_check() {
+			var cardResult = null;
+			$.ajax({
+				url : 'cardList_check',
+				async : false,
+				dataType : 'text',
+				success : function(txtData) {
+					cardResult = txtData;
+				}
+			});
+			return cardResult;
+		}
+		/***********************************************/
+	
+		
+
+		/***********************이용권 구매************************/
+		function subscribe_payment() {
+
+			if ($('input:radio[name="card_no"]').is(":checked") != true) {
+				$('#myModal').on('show.bs.modal', function(e) {
+					$(e.target).find('#paymentMessage').html('결제카드를 선택해주십시오.');
+				});
+				$('#myModal').modal('show');
+				$('#modalButton').on('click', function() {
+					$('#myModal').modal('hide');
+				});
+				return;
+			}
+
+			if ($('input:checkbox[name="subscribeCheckbox"]').is(":checked") != true) {
+				$('#myModal').on('show.bs.modal', function(e) {
+					$(e.target).find('#paymentMessage').html('결제진행에 동의해주십시오.');
+				});
+				$('#myModal').modal('show');
+				$('#modalButton').on('click', function() {
+					$('#myModal').modal('hide');
+				});
+				return;
+			}
+
+			if ($("input:checkbox[name='autoPay']").is(":checked") == true) {
+				$('#subs_autoPay').attr('value', 'true');
+			}
+
+			$('#selected_card_no').attr('value',
+					$("input:radio[name='card_no']:checked").val());
+
+			$.ajax({
+				url : 'user_subscribe_payment_action',
+				method : 'POST',
+				data : $('#subf').serialize(),
+				dataType : 'text',
+				success : function(resultStr) {
+					if (resultStr.trim() == 'true') {
+						$('#myModal').on(
+								'show.bs.modal',
+								function(e) {
+									$(e.target).find('#paymentMessage').html(
+											'이용권이 결제되었습니다.');
+								});
+						$('#myModal').modal('show');
+
+					} else if (resultStr.trim() == 'false') {
+						$('#myModal').on(
+								'show.bs.modal',
+								function(e) {
+									$(e.target).find('#paymentMessage').html(
+											'이미 결제하신 이용권이 있습니다.');
+								});
+						$('#myModal').modal('show');
+					}
+					$('#modalButton').on('click', function() {
+						$('#myModal').modal('hide');
+						location.href = 'index';
+					});
+				}
+			});
+		}
+	</script>
+
+</body>
+
+</html>

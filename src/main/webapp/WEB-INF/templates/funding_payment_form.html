@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="description" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="author" content="StreamLab" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Streamlab - Video Streaming HTML5 Template</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.png">
+    <!-- CSS bootstrap-->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <!--  Style -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!--  Responsive -->
+    <link rel="stylesheet" href="css/responsive.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+ 
+</head>
+
+<body>
+ <!-- paymentResult Toast start -->
+	<div id="payment" th:insert="include_common::payment"></div>
+	<!-- wishList Toast end -->
+    <!--=========== Loader =============-->
+    <div id="gen-loading">
+        <div id="gen-loading-center">
+            <img src="images/logo-1.png" alt="loading">
+        </div>
+    </div>
+    <!--=========== Loader =============-->
+ <!-- The Modal -->
+	<div class="modal" id="myModal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	
+	      <!-- Modal Header -->
+	      <div class="modal-header" style="background-color: black; color: white;">
+	        <h4 class="modal-title">카드 변경</h4>
+	        <button type="button" class="close" data-dismiss="modal" style="color : red;">&times;</button>
+	      </div>
+	
+	      <!-- Modal body -->
+	      <div class="modal-body" style="background-color: black; color: white; font-size: 25px">
+	      <div>
+			<form  id="cardf" method='post' target="ifrm">
+				카드 선택 :
+				<select name="card" id="card">
+					<option th:each="cardList:${cardList}" th:value="${cardList.card_no}+'/'+${cardList.card_realNo}" th:text="${cardList.card_alias}"></option>
+				</select> <br /><br/>
+					<!-- <input type="hidden" th:if="cardList:${cardList}" th:value="${cardList.card_realNo}" id="cardR_N"/> -->
+				<input type="button" value="선택" style="background-color: red; border-style: none; float: right;" />
+				
+		<!--  
+	      <table th:each="cardList:${cardList}">
+				<tr>
+					<td th:text="${cardList.card_alias}"></td>
+					<td th:text="${cardList.card_realNo}"></td>
+					<td align=center>
+					<input type="button" value="선택"onClick="cardSelected();"></td>
+				</tr>form="cardf"
+			</table>-->
+	      <!-- Modal footer 
+	      <div class="modal-footer" id='cbtn'>
+	     	 <input type="submit" class="btn btn-danger" data-dismiss="modal" value="선택33"/>
+	        <button type="submit" class="btn btn-danger"  >선택11</button>-->
+	     <!--  </div> -->
+	      </form>
+	      <iframe name='ifrm' width='0' height='0' frameborder='0'></iframe>
+		</div>
+	
+	    </div>
+	  </div>
+	</div>
+    </div>
+    <!--========== Header ==============-->
+    <div id="header" th:insert="include_common::top">
+    </div>
+    <!--========== Header ==============-->
+
+    <!-- Single movie Start -->
+    <section class="gen-section-padding-3 gen-single-movie">
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-lg-12">
+                    <div class="gen-single-movie-wrapper style-1">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div th:each="fundingDetail : ${fundingDetail}" class="gen-video-holder">
+                                     <img th:src="@{/img/movie/} + ${fundingDetail.movie_img}" alt="영화 포스터" width="400">
+                                </div>
+                                <div class="gen-single-movie-info">
+                                    <h2 th:text="${fundingDetail.movie_title} +'('+ ${fundingDetail.movie_rating} +' | '+ ${fundingDetail.movie_runtime} +')'" class="gen-title" style="clear:both">펀딩 영화제목(관람등급 | 런타임)</h2>
+                                    <h2 th:text="'달성률 : '+${#numbers.formatPercent(percent,1,1)}" class="percent" style="clear:both">달성률</h2>
+                                    <h2 th:text="'~ '+${#dates.format(fundingDetail.funding_endDate, 'yyyy-MM-dd')}" style="color :red" class="date">남은기간</h2>
+                                    <br />
+									<div class="theater_info">
+                                            <ul>
+                                                <li>
+                                                    <span>상영관 :</span>
+                                                    <span th:text="${fundingDetail.theater_name}">상영관이름</span>
+                                                </li>
+                                                <li>
+                                                    <span>상영관 주소 :</span>
+                                                    <span th:text="${fundingDetail.theater_address}">상영관이름</span>
+                                                </li>
+                                                <li>
+                                                    <span>상영 날짜 :</span>
+                                                    <span th:text="${#dates.format(fundingDetail.funding_movieDate, 'yyyy-MM-dd hh:mm')}">상영날짜</span>
+                                                </li>
+                                                <li>
+                                                    <span>인  원 :</span>
+                                                    <span th:text="${qty}">인원</span>
+                                                </li>
+                                                <li>
+                                                    <span>총 금액 :</span>
+                                                    <span th:text="${#numbers.formatInteger(fundingDetail.funding_price * qty,3,'COMMA')} + '원'">총금액</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="user_info">
+                                            <ul>
+                                                <li>
+                                                    <span>성  함 :</span>
+                                                    <span th:text="${fundingDetail.user_id}">아이디</span>
+                                                </li>
+                                                <li>
+                                                    <span>연락처 :</span>
+                                                    <span th:text="${fundingDetail.user_phone}">연락처</span>
+                                                </li>
+                                                <li>
+                                                    <span>이메일 :</span>
+                                                    <span th:text="${fundingDetail.user_id}">이메일</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <table style="width: 30%" id="cardT">
+											<tr>
+												<td th:text="${fundingDetail.card_alias}" id="cardA"></td>
+												<td th:text="${cardRealNo}" id="cardRN"></td>
+			                                      <!-- Button to Open the Modal -->
+												<td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="background-color: red;">
+												  카드 변경
+												</button>
+												</td>
+											</tr>
+										</table>
+									<form  id="actionf" >
+										<input th:value="${fundingDetail.card_no}" name="card_no" id="card_no" type="hidden"><br>
+										<input th:value="${fundingDetail.movie_no}" name="movie_no" type="hidden"><br>
+									    <input th:value="${fundingDetail.funding_no}" name="funding_no" type="hidden"><br>
+									    <input th:value="${qty}" name="qty" type="hidden">
+									    <input type="submit" value="결제하기" >
+									</form>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Single movie End -->
+
+    <!-- footer start -->
+    <div id="header" th:insert="include_common::bottom">
+    </div>
+    <!-- footer End -->
+
+    <!-- Back-to-Top start -->
+    <div id="back-to-top">
+        <a class="top" id="top" href="#top"> <i class="ion-ios-arrow-up"></i> </a>
+    </div>
+    <!-- Back-to-Top end -->
+
+    <!-- js-min -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/asyncloader.min.js"></script>
+    <!-- JS bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- owl-carousel -->
+    <script src="js/owl.carousel.min.js"></script>
+    <!-- counter-js -->
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <!-- popper-js -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/swiper-bundle.min.js"></script>
+    <!-- Iscotop -->
+    <script src="js/isotope.pkgd.min.js"></script>
+
+    <script src="js/jquery.magnific-popup.min.js"></script>
+
+    <script src="js/slick.min.js"></script>
+
+    <script src="js/streamlab-core.js"></script>
+
+    <script src="js/script.js"></script>
+	   <script type="text/javascript">
+    	$(function(){
+    		$("#cardf input[value='선택']").on('click',function(e){
+    			if(confirm("카드를 변경하시겠습니까?")==true){
+    				alert('변경되었습니다');
+    				var updateArray = $('#card option:selected').val().split('/');
+	    			var updateCard_No = updateArray[0];
+	    			
+	    			var updateCardRN = updateArray[1].split('-');
+	    			var updateCardR_N = updateCardRN[0]+'-****-****-'+updateCardRN[3];
+	    			
+	    			var updateCardAL = $('#card option:selected').text();
+	    			document.getElementById('cardA').innerText=updateCardAL;
+	    			document.getElementById('cardRN').innerText=updateCardR_N;
+	    			$('#card_no').val(updateCard_No);
+	    			$('#cardf').submit();
+	    			$('#myModal').modal("hide");
+    			}else{
+    				return;
+    			}
+    			e.preventDefault();
+    		});
+    	});
+    	
+    	$('#actionf').on("submit",function(e) {
+			$.ajax({
+				url:'funding_payment_action',
+				method:'POST',
+				dataType:'text',
+				data:$(e.target).serialize(),
+				success:function(result) {
+					var count = parseInt(result);
+					switch (count) {
+					case 1:
+						$('#paymentRToast').on('show.bs.toast',function(e){
+							$(e.target).find('.toast-body').html('이미 신청하신 내역이 있습니다.');
+						});
+						$('#paymentRToast').toast('show');
+						$('#paymentRToast').on('hide.bs.toast',function(e){
+							location.replace("funding_history");
+						});	
+						break;
+						
+					case 2:
+						$('#paymentRToast').on('show.bs.toast',function(e){
+							$(e.target).find('.toast-body').html('인원초과로 신청하실 수 없습니다. 다른 펀딩으로 만나요.');
+						});
+						$('#paymentRToast').toast('show');
+						$('#paymentRToast').on('hide.bs.toast',function(e){
+							location.replace("funding_main");
+						});	
+						break;
+
+					case 3:
+						$('#paymentRToast').on('show.bs.toast',function(e){
+							$(e.target).find('.toast-body').html('신청 성공');
+						});
+						$('#paymentRToast').toast('show');
+						$('#paymentRToast').on('hide.bs.toast',function(e){
+							location.replace("funding_history");
+						});	
+						break;
+
+					default:
+						$('#paymentRToast').on('show.bs.toast',function(e){
+							$(e.target).find('.toast-body').html('error');
+						});
+						$('#paymentRToast').toast('show');
+						$('#paymentRToast').on('hide.bs.toast',function(e){
+							location.href='funding_main';
+						});
+						break;
+						
+					}
+					
+					
+				}
+			});
+    		
+			e.preventDefault();
+		});
+    </script>
+</body>
+
+</html>

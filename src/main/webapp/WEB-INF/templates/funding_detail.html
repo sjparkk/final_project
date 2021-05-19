@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="description" content="Streamlab - Video Streaming HTML5 Template" />
+    <meta name="author" content="StreamLab" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Streamlab - Video Streaming HTML5 Template</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.png">
+    <!-- CSS bootstrap-->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <!--  Style -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!--  Responsive -->
+    <link rel="stylesheet" href="css/responsive.css" />
+   
+   <script type="text/javascript">
+    	function funding() {
+    		document.f.action = "funding_payment_form";
+    		f.submit();
+		}
+    </script>
+</head>
+
+<body>
+
+    <!--=========== Loader =============-->
+    <div id="gen-loading">
+        <div id="gen-loading-center">
+            <img src="images/logo-1.png" alt="loading">
+        </div>
+    </div>
+    <!--=========== Loader =============-->
+
+    <!--========== Header ==============-->
+    <div id="header" th:insert="include_common::top">
+    </div>
+    <!--========== Header ==============-->
+
+    <!-- Single movie Start -->
+    <section class="gen-section-padding-3 gen-single-movie">
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-lg-12">
+                    <div class="gen-single-movie-wrapper style-1">
+                        <div class="row">
+                            <div class="col" style="float: left; margin: 10px; padding:10px">
+                                <div th:each="fundingDetail : ${fundingDetail}" class="gen-video-holder" style="position:absoulte;width:100%;height:100%;">
+                                     <img th:src="@{/img/movie/} + ${fundingDetail.movie_img}" alt="영화 포스터" style="position:absoulte;width:100%;height:100%;">
+                                </div>
+                                </div>
+                                <div class="col" style= "margin-top: 50px; margin-left: 15px">
+                                    <h2 th:text="${fundingDetail.movie_title} +' | '+${fundingDetail.theater_name}" class="gen-title" style="clear:both">펀딩 영화제목 | 극장</h2><br>
+								  	<h3 style="float: left" th:text="'펀딩 기간 : '+${#dates.format(fundingDetail.funding_startDate, 'yyyy-MM-dd')}+' ~ '">시작일</h3>
+								  	<h3 style="color :red" th:text="${#dates.format(fundingDetail.funding_endDate, 'yyyy-MM-dd')}" >마감일</h3>
+								  	<br>
+								  	<h3 th:text="'남은 좌석 : '+${fundingDetail.funding_totalSeat - fundingDetail.funding_resvSeat} +' /'+ ${fundingDetail.funding_totalSeat}">남은 좌석</h3><br>
+								  	<h3 class="gen-title" th:text="'달성률 : '+${#numbers.formatPercent(percent,1,1)}">달성률 : </h3>
+									<div class="progress" style="height:40px; width:40%; color: black">
+									  <div th:text="${#numbers.formatPercent(percent,1,1)}" class="progress-bar bg-danger" role="progressbar" aria-valuenow="70"
+									  aria-valuemin="0" aria-valuemax="100" th:style="'width:'+${#numbers.formatPercent(percent,1,1)}+';font-size:150%'">
+									    60%
+									  </div>
+									</div><br>
+                                    <h3 th:text="'금 액 : '+${#numbers.formatInteger(fundingDetail.funding_price,3,'COMMA')}+'원'" class="price" id="price">금액</h3><br>
+										<form name="f" style="width: 75%; float: left" >
+											  <select name="qty">
+											    <option th:selected="1" selected>1</option>
+											    <option value="2">2</option>
+											    <option value="3">3</option>
+											    <option value="4">4</option>
+											  </select>
+											  <input th:value="${fundingDetail.funding_no}" name="funding_no" type="hidden"><br>
+											  <input type="submit" value="결제하기" onclick="funding();" style="width:360pt;float: left">
+											</form> 
+                                </div>   
+                     <div th:each="fundingDetail : ${fundingDetail}" class="container" style="margin-top: 10px">
+					  <div id="accordion">
+					    <div class="card">
+					      <div class="card-header">
+					        <a class="card-link" data-toggle="collapse" href="#collapseOne">
+					          영화 정보 ☟
+					        </a>
+					      </div>
+					      <div id="collapseOne" class="collapse" data-parent="#accordion">
+					        <div class="card-body">
+					          <ul>
+							        <li>
+		                                 <span>런타임 :</span>
+		                                 <span th:text="${fundingDetail.movie_runtime}">런타임</span>
+		                             </li>
+		                             <li>
+	                                     <span>관람 등급 :</span>
+	                                     <span th:text="${fundingDetail.movie_rating}">관람 등급</span>
+	                                 </li>
+		                             <li>
+	                                     <span>감독 :</span>
+	                                     <span th:text="${fundingDetail.md_director}">감독</span>
+	                                 </li>
+	                                 <li>
+	                                     <span>출연진 :</span>
+	                                     <span th:text="${fundingDetail.md_actors}">출연진</span>
+	                                 </li>
+				           			 <li>
+	                                     <span th:text="${fundingDetail.md_summary}">줄거리</span>
+	                                 </li>
+	                                 
+					           </ul>
+					          <iframe width="100%" height="550px" th:src="${fundingDetail.md_subfilm}"
+						                     frameborder="0"
+						                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						                     allowfullscreen>
+						      </iframe>
+					        </div>
+					      </div>
+					    </div>
+					    <div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+					        영화관 정보 ☟
+					      </a>
+					      </div>
+					      <div id="collapseTwo" class="collapse" data-parent="#accordion">
+					        <div class="card-body">
+						        <ul>
+							        <li>
+		                                 <span>상영관 :</span>
+		                                 <span th:text="${fundingDetail.theater_name}">상영관이름</span>
+		                             </li>
+				           			 <li>
+	                                     <span>상영관 주소 :</span>
+	                                     <span th:text="${fundingDetail.theater_address}">상영관이름</span>
+	                                 </li>
+	                                 <li>
+	                                     <span>상영관 연락처 :</span>
+	                                     <span th:text="${fundingDetail.theater_phone}">상영관 연락</span>
+	                                 </li>
+					           	
+					           </ul>
+					           <img th:src="@{/img/theater/} + ${fundingDetail.theater_img}" width="1200" >
+					           
+					        </div>
+					      </div>
+					    </div>
+					    
+					  </div>
+					</div>
+					    
+               </div>
+            </div>
+        </div>
+    </section>
+    <!-- Single movie End -->
+
+    <!-- footer start -->
+    <div id="header" th:insert="include_common::bottom">
+    </div>
+    <!-- footer End -->
+
+    <!-- Back-to-Top start -->
+    <div id="back-to-top">
+        <a class="top" id="top" href="#top"> <i class="ion-ios-arrow-up"></i> </a>
+    </div>
+    <!-- Back-to-Top end -->
+
+    <!-- js-min -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/asyncloader.min.js"></script>
+    <!-- JS bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- owl-carousel -->
+    <script src="js/owl.carousel.min.js"></script>
+    <!-- counter-js -->
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <!-- popper-js -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/swiper-bundle.min.js"></script>
+    <!-- Iscotop -->
+    <script src="js/isotope.pkgd.min.js"></script>
+
+    <script src="js/jquery.magnific-popup.min.js"></script>
+
+    <script src="js/slick.min.js"></script>
+
+    <script src="js/streamlab-core.js"></script>
+
+    <script src="js/script.js"></script>
+    
+   
+</body>
+
+</html>

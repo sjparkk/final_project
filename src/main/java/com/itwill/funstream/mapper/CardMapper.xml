@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.funstream.mapper.CardMapper">
+	<resultMap id="cardResultMap"
+		type="com.itwill.funstream.domain.Card" autoMapping="true">
+		<association property="userInfo"
+			javaType="com.itwill.funstream.domain.UserInfo" autoMapping="true">
+			<result column="user_no" property="user_no" />
+		</association>
+	</resultMap>
+
+	<!-- 카드등록 -->
+	<insert id="registCard"
+		parameterType="com.itwill.funstream.domain.Card"> insert into card
+		values(Card_card_no_SEQ.nextval,
+		#{card_realNo}, #{card_valid},
+		#{card_cvc},
+		#{card_password},
+		#{card_alias}, #{userInfo.user_no})
+	</insert>
+
+	<!-- 카드삭제 -->
+	<delete id="unregistCard" parameterType="int">
+		delete from card where
+		card_no=#{card_no}
+	</delete>
+
+	<!-- 유저가 가지고 있는 카드리스트 -->
+	<select id="cardListByUserNo" parameterType="int"
+		resultMap="cardResultMap">
+		select * from card join userinfo on card.user_no =
+		userinfo.user_no where card.user_no=#{user_no}
+	</select>
+
+	<!-- 카드번호에 따른 존재여부 확인 -->
+	<select id="existenceCheckCardRealNo" parameterType="string"
+		resultType="int">
+		select count(*) isexisted from card where
+		card_realno=#{card_realno}
+	</select>
+
+	<!-- 카드 하나 선택 -->
+	<select id="cardSelectByCardNo" parameterType="int"
+		resultType="com.itwill.funstream.domain.Card">
+		select * from card where card_no=#{card_no}
+	</select>
+</mapper>

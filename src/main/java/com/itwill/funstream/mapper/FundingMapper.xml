@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.funstream.mapper.FundingMapper">
+	
+	
+	<resultMap id="FundingDetailWithFundingWihtTheaterWithMovieResultmap" type="com.itwill.funstream.domain.FundingDetail" autoMapping="true">
+		<association property="funding" javaType="com.itwill.funstream.domain.Funding" autoMapping="true"/>
+		<association property="movie" javaType="com.itwill.funstream.domain.Movie" autoMapping="true"/>
+		<association property="theater" javaType="com.itwill.funstream.domain.Theater" autoMapping="true"/>
+		
+	</resultMap>
+	
+	<resultMap id="FundingDetailWithFundingWithMovieResultmap" type="com.itwill.funstream.domain.FundingDetail" autoMapping="true">
+		<association property="funding" javaType="com.itwill.funstream.domain.Funding" autoMapping="true"/>
+		<association property="movie" javaType="com.itwill.funstream.domain.Movie" autoMapping="true"/>
+	</resultMap>
+
+	<resultMap id="fundingResultMap" type="com.itwill.funstream.domain.Funding" autoMapping="true">
+		<association property="fundingDetail"  javaType="com.itwill.funstream.domain.FundingDetail" autoMapping="true"/>	
+		<association property="theater"  javaType="com.itwill.funstream.domain.Theater" autoMapping="true"/>	
+		<association property="movie" javaType="com.itwill.funstream.domain.Movie" autoMapping="true"/>	
+		<association property="fundingList" javaType="com.itwill.funstream.domain.FundingList" autoMapping="true"/>			
+	</resultMap>
+	
+	<resultMap id="fundingListResultMap" type="com.itwill.funstream.domain.FundingList" autoMapping="true">
+		<association property="userInfo" javaType="com.itwill.funstream.domain.UserInfo" autoMapping="true"/>		
+		<association property="card" javaType="com.itwill.funstream.domain.Card" autoMapping="true"/>		
+		<association property="funding" javaType="com.itwill.funstream.domain.Funding" autoMapping="true"/>		
+		<association property="movie" javaType="com.itwill.funstream.domain.Movie" autoMapping="true"/>	
+		<association property="fundingDetail"  javaType="com.itwill.funstream.domain.FundingDetail" autoMapping="true"/>	
+		<association property="theater"  javaType="com.itwill.funstream.domain.Theater" autoMapping="true"/>	
+	</resultMap>
+	
+	<resultMap id="preferedTheaterList" type="com.itwill.funstream.domain.Theater" autoMapping="true" >
+		<association property="userInfoTheater" javaType="com.itwill.funstream.domain.UserInfoTheater" autoMapping="true"/>
+	</resultMap>
+	
+
+	<!-- 영화관이름별리스트 -->	
+	<select id="findAllFundingOrderByTheaterNameAsc" resultType="com.itwill.funstream.domain.FundingResultValue">		
+		select * from funding f
+		join fundingdetail fd on fd.funding_no=f.funding_no
+		join theater t on t.theater_no=fd.theater_no
+		join movie m on m.movie_no= fd.movie_no
+		where f.funding_status = '진행중'
+		order by t.theater_name asc			
+	</select>
+		
+	<!-- 신청내역 -->
+	<select id="findFundingListByUserNo" parameterType="int" resultMap="fundingListResultMap">
+		select * from fundingList fl
+		join userinfo u on u.user_no = fl.user_no
+		join card c on c.card_no = fl.card_no
+		join funding f on f.funding_no = fl.funding_no
+		join movie m on m.movie_no = fl.movie_no
+		join fundingdetail fd on f.funding_no = fd.funding_no
+		join theater t on t.theater_no = fd.theater_no
+		where fl.user_no=#{user_no}
+	</select>
+	
+	<!--  선호영화관등록 --> 
+	<insert id="insertPreferedTheater" parameterType="com.itwill.funstream.domain.UserInfoTheater">				
+		INSERT INTO USERINFO_THEATER(prefer_no,user_no,theater_no)
+		VALUES (USERINFO_THEATER_PREFER_NO_SEQ.nextval, #{userInfo.user_no},#{theater.theater_no})
+	</insert>
+	
+	<!--  유저1의 선호영화관 전체 목록 -->
+	<select id="findPreferedTheaterListByUserNo" parameterType="int" resultMap="preferedTheaterList">
+		select * from userinfo u
+		join userinfo_theater ut
+		on u.user_no = ut.user_no
+		join theater t
+		on ut.theater_no=t.theater_no
+		where u.user_no=#{user_no}
+	</select>
+	
+	<!-- 펀딩결제화면에 뿌려줄 데이터들.. (유저넘버와 신청한 펀딩넘버를 조건으로 셀렉트)-->
+	<select id="findFundingPayInfoByUserNoAndFundingNo" parameterType="int" resultType = "com.itwill.funstream.domain.FundingResultValue">
+		select *
+		from fundingdetail fd
+		join funding f on f.funding_no=fd.funding_no and f.funding_no=#{funding_no}
+		join movie m on m.movie_no=fd.movie_no
+		join theater t on t.theater_no=fd.theater_no
+		join userinfo u on u.user_no=#{user_no}
+		left join card c on c.user_no=u.user_no
+	</select>
+	
+	<!--  펀딩상세 정보 뿌리기 -->
+	<select id="findFundingDetailByFundingNo" parameterType="int" resultType = "com.itwill.funstream.domain.FundingResultValue">
+		SELECT * 
+        FROM fundingdetail fd
+		JOIN funding f ON fd.funding_no = f.funding_no
+		JOIN movie m ON m.movie_no = fd.movie_no
+		join MOVIEDETAIL md on md.movie_no = m.movie_no
+		JOIN theater t ON t.theater_no = fd.theater_no
+		WHERE f.funding_no=#{funding_no}
+	</select>
+	
+	<!--sort by 최신(펀딩 시작날짜 최신순) -->
+	<select id="findAllFundingOrderByFundingStartDateDesc" resultType = "com.itwill.funstream.domain.FundingResultValue">
+		select * from funding f
+		join fundingdetail fd on fd.funding_no=f.funding_no
+		join theater t on t.theater_no=fd.theater_no
+		join movie m on m.movie_no= fd.movie_no
+		where f.funding_status = '진행중'
+		order by funding_startdate desc 
+	</select>
+
+
+	<!--   sort by 마감(펀딩 마감날짜 제일 빠른거) --> 
+	<select id="findAllFundingOrderByFundingEndDateAsc" resultType = "com.itwill.funstream.domain.FundingResultValue">
+		select * from funding f
+		join fundingdetail fd on fd.funding_no=f.funding_no
+		join theater t on t.theater_no=fd.theater_no
+		join movie m on m.movie_no= fd.movie_no
+		where f.funding_status = '진행중'
+		order by funding_enddate asc
+	</select>
+
+	<!--  
+	한개 선호영화관 삭제하기
+	deletePreferedTheaterByPreferNo() -3
+	-->
+	<delete id="deletePreferedTheaterByPreferNo" parameterType="int">
+		DELETE FROM USERINFO_THEATER WHERE PREFER_NO = #{prefer_no}
+	</delete>
+	
+	<!--  
+	마이페이지에서 신청내역에서 진행중이던 펀딩이 성공이나 실패로 변할시
+	성공, 실패로 update
+	updateFundingStatusByFundingNo() -7
+	update fundinglist set fl_status='실패' where funding_no=1;
+	-->
+	<update id="updateFundingStatusByFundingNo">
+		update funding set funding_status=#{funding_status} where funding_no=#{funding_no}
+	</update>
+
+	<!--  
+	sort by 달성률(펀딩 달성률)
+	findAllFundingOrderByPercentDesc()-11
+	-->
+	<select id="findAllFundingOrderByPercentDesc" resultType = "com.itwill.funstream.domain.FundingResultValue">
+		select * from funding f
+		join fundingdetail fd on fd.funding_no=f.funding_no
+		join theater t on t.theater_no=fd.theater_no
+		join movie m on m.movie_no= fd.movie_no			
+		where funding_status = '진행중'
+		order by (f.funding_resvseat/f.funding_totalseat)*100 desc
+	</select>
+
+	<!--  
+	로그인시 메인상단(영화관 1개)에 뿌려줄 펀딩목록 3개(펀딩 시작일-최신순으로 조회)
+	펀딩(달성률,시작마감일) + 펀딩디테일(펀딩,무비,영화관)+ 무비(영화제목,포스터) + 영화관(영화관)
+	findFundingListByTheaterNo()-13
+	-->
+	<select id="findFundingListByTheaterNo" parameterType="int" resultMap="FundingDetailWithFundingWihtTheaterWithMovieResultmap">
+		select ROWNUM, fList.*
+		from(select f.funding_no funding_no, FUNDING_RESVSEAT,FUNDING_TOTALSEAT,FUNDING_PRICE,FUNDING_STATUS,FUNDING_STARTDATE,
+                    FUNDING_ENDDATE,FUNDING_MOVIEDATE,FD_NO,t.THEATER_NO theater_no,THEATER_ADDRESS,THEATER_NAME,THEATER_PHONE,
+                    THEATER_IMG,m.MOVIE_NO movie_no,MOVIE_TITLE, MOVIE_IMG, MOVIE_RATING,MOVIE_COUNT,MOVIE_OPENDATE,MOVIE_RUNTIME,
+                    (f.funding_resvseat / f.funding_totalseat)*100 as percent
+		        from fundingdetail fd
+		        join funding f
+		            on f.funding_no=fd.funding_no and f.funding_status = '진행중'
+		        join movie m
+		            on m.movie_no=fd.movie_no			
+		        join theater t
+		            on t.theater_no=fd.theater_no		
+		        where t.theater_no=#{t.theater_no}
+		        order by f.funding_startdate desc) fList
+		where ROWNUM &lt;=3
+	</select>
+
+	<!--  
+	비로그인시 메인상단에 뿌려줄 펀딩목록 3개(진행중인 펀딩 중 달성률순으로 조회)
+	findFundingListByPercent()-14
+	-->
+	<select id="findFundingListByPercent" resultMap="FundingDetailWithFundingWithMovieResultmap">
+		select ROWNUM, fList.*
+		from(select f.funding_no funding_no, FUNDING_RESVSEAT,FUNDING_TOTALSEAT,FUNDING_PRICE,FUNDING_STATUS,FUNDING_STARTDATE,FUNDING_ENDDATE,FUNDING_MOVIEDATE,
+	                FD_NO,THEATER_NO, 
+	                m.MOVIE_NO,MOVIE_TITLE,MOVIE_IMG,MOVIE_RATING,MOVIE_COUNT,MOVIE_OPENDATE,MOVIE_RUNTIME,
+	                (f.funding_resvseat / f.funding_totalseat)*100 as percent
+		     from fundingdetail fd
+		         join funding f
+		              on f.funding_no=fd.funding_no and funding_status='진행중'
+		         join movie m
+		              on m.movie_no=fd.movie_no
+		         order by percent desc) fList
+		where ROWNUM &lt;=3
+	</select>
+
+	<!-- 펀딩결제시 펀딩_유저에 삽입 
+		INSERT INTO funding_user VALUES (funding_user_fundUSer_no_SEQ.nextval,1,7);
+	-->
+	<insert id="insertFundingUser" parameterType="int">
+		INSERT INTO funding_user VALUES (funding_user_fundUSer_no_SEQ.nextval,#{user_no},#{funding_no})
+	</insert>
+
+	<!-- 펀딩결제시 펀딩리스트에 삽입 -->
+	<insert id="insertFundingList" parameterType="int">
+		insert INTO fundingList VALUES (fundingList_fL_no_SEQ.nextval,sysdate,#{fl_qty},#{user_no},#{card_no},#{funding_no},#{movie_no})
+	</insert>
+
+	
+	<!-- 신청내역 페이지메이커	-->
+	<select id="selectAllFundingCount" parameterType="int" resultType="int">
+		 select count(*) cnt from fundingList where user_no=#{user_no}
+	</select>
+	
+	<select id="selectfundingListByUserNo" resultMap="fundingListResultMap">
+		select * from 
+		(select rownum idx, p.* from
+		    (select * from fundingList fl
+		     join funding f on f.funding_no=fl.funding_no
+		     join movie m on m.movie_no=fl.movie_no
+		     where fl.user_no= #{user_no}
+		     order by f.funding_enddate desc) p)
+	     where idx &gt;=#{start} and idx &lt;=#{last}
+	</select>
+
+	<!--  펀딩결제시 펀딩 qty업데이트 -->
+	<update id="updateResvSeatByFunding" parameterType="int">
+		update funding set FUNDING_RESVSEAT = FUNDING_RESVSEAT + #{qty}
+		where funding_no =#{funding_no}
+	</update>
+	
+	<!-- userInfo 선호영화관 이름 리스트 -->
+	<select id="findTheaterName" resultMap="preferedTheaterList">
+		select * from theater
+	</select>
+	
+
+	<!-- 펀딩,펀딩디테일 삽입 -->
+	<insert id="createFundingAndFundingDetail" parameterType="int">
+		BEGIN
+		insert into funding values(funding_funding_no_SEQ.nextval, 0, 40, 35000, '진행중', sysdate, sysdate+7, sysdate+14);
+		insert into fundingdetail values(fundingDetail_fD_no_SEQ.nextval, #{theater_no}, #{movie_no}, funding_funding_no_SEQ.currval);
+		END;
+	</insert>
+
+
+</mapper>
+

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.itwill.funstream.mapper.SubsUserInfoMapper">
+	<resultMap id="subsUserInfoResultMap"
+		type="com.itwill.funstream.domain.SubsUserInfo" autoMapping="true">
+		<association property="userInfo"
+			javaType="com.itwill.funstream.domain.UserInfo" autoMapping="true">
+			<result column="user_no" property="user_no" />
+		</association>
+		<association property="subscribe"
+			javaType="com.itwill.funstream.domain.Subscribe" autoMapping="true">
+			<result column="subs_no" property="subs_no" />
+		</association>
+		<collection property="card"
+			ofType="com.itwill.funstream.domain.Card" autoMapping="true">
+			<result column="card_no" property="card_no" />
+		</collection>
+	</resultMap>
+
+	<!-- 이용권 결제 -->
+	<insert id="buyPass"
+		parameterType="com.itwill.funstream.domain.SubsUserInfo">
+		INSERT INTO subs_userinfo
+		VALUES(subs_userInfo_sUser_no_SEQ.NEXTVAL,
+		SYSDATE,
+		SYSDATE+#{subscribe.subs_duration},
+		#{subscribe.subs_autoPay},
+		#{userInfo.user_no}, #{subscribe.subs_no}, #{card.card_no})
+	</insert>
+
+	<!-- 이용권 해지 -->
+	<delete id="canclePass" parameterType="int">
+		DELETE FROM
+		subs_userinfo
+		WHERE user_no=#{user_no}
+	</delete>
+
+	<!-- 자동결제 해지 -->
+	<update id="cancleAutoPay" parameterType="int">
+		UPDATE subs_userinfo
+		SET suser_autopay='false' WHERE user_no=#{user_no}
+	</update>
+
+	<!-- 자동결제 날짜 변경 -->
+	<update id="changeReDate"
+		parameterType="com.itwill.funstream.domain.SubsUserInfo">
+		UPDATE subs_userinfo SET
+		suser_redate=suser_redate+#{subscribe.subs_duration} WHERE
+		user_no=#{userInfo.user_no}
+	</update>
+
+	<!-- 자동결제 카드 변경 -->
+	<update id="changeAutoPayCard"
+		parameterType="com.itwill.funstream.domain.SubsUserInfo">
+		UPDATE
+		subs_userinfo SET card_no=#{card.card_no} WHERE
+		user_no=#{userInfo.user_no}
+	</update>
+
+	<!-- 구독중인 유저의 카드리스트 불러오기 -->
+	<select id="cardListbyUserNo" parameterType="int"
+		resultType="com.itwill.funstream.domain.Card">
+		SELECT card.* FROM
+		subs_userinfo join card on
+		card.user_no=subs_userinfo.user_no
+		WHERE
+		subs_userinfo.user_no=#{subsUserinfo.user_no}
+	</select>
+
+	<!-- 유저가 사용중인 이용권 정보 -->
+	<select id="subsPassbyUserNo" parameterType="int"
+		resultMap="subsUserInfoResultMap">
+		SELECT subs_userinfo.*,
+		subscribe.subs_type,
+		subscribe.subs_duration FROM
+		subs_userinfo join
+		subscribe on
+		subscribe.subs_no=subs_userinfo.subs_no
+		WHERE
+		subs_userinfo.user_no=#{user_no}
+	</select>
+
+	<!-- 유저가 이용권을 사용중인지 확인 -->
+	<select id="existenceCheckUserNo" parameterType="int"
+		resultType="int">
+		select count(*)
+		isexisted from subs_userinfo where
+		user_no=#{user_no}
+	</select>
+
+	<!-- 자동결제가 설정되어 있는 유저리스트 -->
+	<select id="findAutoPayList" resultMap="subsUserInfoResultMap">
+		select subs_userinfo.*,
+		subscribe.subs_duration
+		from
+		subs_userinfo join subscribe on
+		subscribe.subs_no=subs_userinfo.subs_no where sUSer_autoPay='true' and
+		sUSer_redate=TO_CHAR(SYSDATE, 'YY/MM/DD')
+	</select>
+</mapper>

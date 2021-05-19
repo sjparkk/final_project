@@ -1,0 +1,90 @@
+<div class="modal" id="myModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title"></h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+
+			<!-- Modal body -->
+			<div class="modal-body">
+				<div>
+					<form id="cardf" method='post' target="ifrm">
+						카드 선택 : <select name="card" id="card">
+						</select> <br /> <br />
+						<!-- <input type="hidden" th:if="cardList:${cardList}" th:value="${cardList.card_realNo}" id="cardR_N"/> -->
+						<input type="button" value="선택" />
+
+						<!--  
+	      <table th:each="cardList:${cardList}">
+				<tr>
+					<td th:text="${cardList.card_alias}"></td>
+					<td th:text="${cardList.card_realNo}"></td>
+					<td align=center>
+					<input type="button" value="선택"onClick="cardSelected();"></td>
+				</tr>form="cardf"
+			</table>-->
+						<!-- Modal footer 
+	      <div class="modal-footer" id='cbtn'>
+	     	 <input type="submit" class="btn btn-danger" data-dismiss="modal" value="선택33"/>
+	        <button type="submit" class="btn btn-danger"  >선택11</button>-->
+						<!--  </div> -->
+					</form>
+					<iframe name='ifrm' width='0' height='0' frameborder='0'></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12" class="text-center">
+			<form>
+				<div class="gen-register-form" style="padding-top: 30px">
+					<h3 style="padding-bottom: 30px;">나의 이용권</h3>
+					<ul>
+						<li><h5 id="subs_no"></h5></li>
+					</ul>
+				</div>
+
+				<div class="gen-register-form" style="padding-top: 30px">
+					<h3 style="padding-bottom: 30px;">이용권 만료일</h3>
+					<ul>
+						<li><h5 id="suser_enddate"></h5></li>
+					</ul>
+				</div>
+
+				<div class="gen-register-form" style="padding-top: 30px">
+					<h3 style="padding-bottom: 30px;">다음 결제일</h3>
+					<ul>
+						<li><h5 id="suser_redate"></h5></li>
+					</ul>
+				</div>
+
+				<div class="gen-register-form" style="padding-top: 30px">
+					<h3 style="padding-bottom: 30px;">결제카드</h3>
+					<table style="width: 100%" id="cardT">
+						<tr>
+							<td id="cardA"></td>
+							<td id="cardRN"></td>
+							<!-- Button to Open the Modal -->
+							<td id="card_change_table"></td>
+							<td id="card_cancle_table"></td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- <div class="form-button">
+						<button type="submit" name="subscribeChange"
+							value="subscribeChange" class="mb-0">이용권변경</button>
+						<button type="submit" name="membershipCancel"
+							value="membershipCancel" class="mb-1">멤버십해지</button>
+					</div> -->
+			</form>
+		</div>
+	</div>
+</div>
